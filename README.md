@@ -1,111 +1,56 @@
-# Ruled by Secrecy
+# Rust port — deployment topology
 
-A predictive, physics-aware multi-agent resilience and flexibility exchange for commercial and critical-infrastructure microgrids. The system forecasts grid stress before it happens, lets on-site assets (batteries, EV chargers, flexible loads) bid to relieve it through a simulated market, and validates every proposed action against a real AC power-flow model before it's allowed to execute.
+**Read this before deploying anything.** Vercel cannot host the Rust
+services themselves — it's built for static sites and serverless/edge
+functions that spin up per-request, not long-running processes with
+in-memory state. `agent_engines_rs` depends on exactly that kind of
+persistent state (the offer cache, the fairness tracker) across its
+`/agents/offers` → `/agents/clear_market` → `/agents/settle` sequence.
+Putting it on Vercel as-is would silently break that sequence the moment
+two calls landed on different serverless instances.
 
-Built in 24 hours across three services by a three-person team.
+## What goes where
 
-## Architecture
+| Component | Deploys to | Why |
+|---|---|---|
+| `dashboard/` (SvelteKit) | **Vercel** | Static + a few server routes — exactly what Vercel is for. Confirmed: `npm run build` produces real Vercel Build Output API v3 output (`.vercel/output/functions`, `.vercel/output/static`). |
+| `gateway/` (Hono) | **Vercel** (edge function) | Thin proxy/BFF only — no state of its own, so it's a legitimate serverless fit. Proxies `/api/grid/*` and `/api/agents/*` to wherever the real Rust services run. |
+| `agent_engines_rs/` | **Fly.io / Railway / Render** (or any host that runs a persistent process) | Needs to stay running and keep its in-memory state across requests. |
+| `grid_engine` (Rust port, when built) | Same as above | Same reasoning. |
+| `orchestrator` (Rust port, when built) | Same as above | Same reasoning. |
 
-```
-                     ┌──────────────────────┐
-                     │     orchestrator     │  Person 3
-                     │  (drives the loop,   │
-                     │  dashboard, chain)   │
-                     └───────────┬──────────┘
-                     ┌───────────┴─────────────────┐
-                     ▼                             ▼
-        ┌────────────────────────┐    ┌────────────────────────┐
-        │      grid_engine       │    │     agent_engines      │
-        │  Person 1 / port 8001  │    │  Person 2 / port 8002  │
-        │                        │    │                        │
-        │  pandapower AC power   │    │   offer generation,    │
-        │   flow, forecasting,   │    │    market clearing,    │
-        │   validation, faults   │    │       settlement       │
-        └────────────────────────┘    └────────────────────────┘
-```
-
-**Canonical call sequence** (see `INTEGRATION_GUIDELINES.md` for the full, current version):
-
-1. `grid_engine` → `GET /grid/state` — read or predict grid stress
-2. `agent_engines` → `POST /agents/offers` — assets submit flexibility offers
-3. `agent_engines` → `POST /agents/clear_market` — offers matched into proposed actions
-4. `grid_engine` → `POST /grid/validate` — every proposed action checked against a real re-solved power flow
-5. Orchestrator keeps only `feasible` results, substituting `adjusted_kw_amount` where set
-6. `agent_engines` → `POST /agents/settle` — feasible actions settled into trades
-7. Orchestrator builds a `BlockchainTransaction` from the resulting `Trade` list
-
-Separately, for demos: `grid_engine` exposes `POST /grid/fault` to inject a simulated event (line fault, grid outage, battery failure, solar drop, demand spike, feeder overload) with real topology-based islanding, and `POST /grid/fault/clear(_all)` to remove it.
-
-## Services
-
-| Service | Owner | Port | Docs |
-|---|---|---|---|
-| `grid_engine` | Person 1 | 8001 | [`grid_engine/INTEGRATION.md`](grid_engine/INTEGRATION.md) |
-| `agent_engines` | Person 2 | 8002 | `agent_engines/INTEGRATION.md` |
-| `orchestrator` | Person 3 | — | *(in progress)* |
-
-Start here: [`INTEGRATION_GUIDELINES.md`](INTEGRATION_GUIDELINES.md) — the single cross-service source of truth for how the three services fit together, what's verified working, and what's still open.
-
-## Grid engine
-
-A 5-bus representative campus microgrid modeled in [pandapower](https://www.pandapower.org/), with real AC power flow (Newton-Raphson) behind every result — nothing here is simulated or faked.
-
-```
-    UTILITY GRID (11 kV)
-          |
-      TRANSFORMER  (11/0.415 kV, 1 MVA)
-          |
-    CAMPUS MAIN BUS (0.415 kV)
-      /        |         \
-   F1 (x3)   F2 (x1)    F3 (x1)
-    |          |            \
- HOSPITAL   ACADEMIC      FACILITY
-    |        |    |
-  BESS    SOLAR   EV
-```
-
-Delivered milestones:
-
-- **M1** — static 5-bus network + single AC power-flow snapshot
-- **M2** — synthetic time-series load/solar profiles
-- **M3** — future-state forecasting
-- **M4** — predicted-violation and required-relief detection
-- **M5** — proposed-action validation against a real re-solved power flow
-- **M6** — simulated fault injection with real topology-based islanding (`networkx` connected-components analysis, not a lookup table)
-
-98/98 tests passing. Full endpoint documentation, verified example payloads, and known gaps are in [`grid_engine/INTEGRATION.md`](grid_engine/INTEGRATION.md).
-
-## Running it locally
+## Local development
 
 ```bash
-git clone https://github.com/andrew-0228/3rd_sem_hacka.git
-cd 3rd_sem_hacka
-pip install -r requirements.txt
+# Terminal 1 — the real Rust service
+cd agent_engines_rs && cargo run
 
-# grid_engine
-uvicorn grid_engine.api:app --port 8001 --reload
-curl http://localhost:8001/health   # -> {"status": "ok"}
+# Terminal 2 — the Hono gateway (proxies to the Rust service)
+cd gateway && npm install && npm run dev
+# listens on :8787, proxies /api/agents/* -> :8002, /api/grid/* -> :8001
 
-# run grid_engine's test suite
-pytest grid_engine/tests/ -q
+# Terminal 3 — the Svelte dashboard
+cd dashboard && npm install && npm run dev
+# set PUBLIC_AGENT_ENGINE_URL / PUBLIC_GRID_ENGINE_URL in dashboard/.env
+# if you want the dashboard talking through the gateway instead of
+# directly to the Rust services, point those at http://localhost:8787/api
 ```
 
-See each service's own `INTEGRATION.md` for its own run/verify instructions and dependencies.
+## Deploying
 
-## Known gaps
+1. **Rust services** — push to Fly.io/Railway/Render from their own
+   Dockerfile or native buildpack (not included yet — ask if you want one
+   scaffolded). Note the public URL each one gets.
+2. **`gateway/`** — `vercel deploy` from inside `gateway/`, or connect the
+   repo in Vercel's dashboard with `gateway/` as the project root. Set
+   `AGENT_ENGINE_URL` / `GRID_ENGINE_URL` in Vercel's Environment
+   Variables to the real URLs from step 1.
+3. **`dashboard/`** — same process, `dashboard/` as the project root. Set
+   `PUBLIC_AGENT_ENGINE_URL` / `PUBLIC_GRID_ENGINE_URL` — or point them at
+   the deployed gateway's URL + `/api` if you want same-origin API calls
+   through the proxy instead of calling the Rust services directly
+   (avoids CORS entirely).
 
-Tracked in detail in `INTEGRATION_GUIDELINES.md`; the current headline item:
-
-- `POST /agents/settle` and `POST /agents/reserve` are documented but not yet implemented in `agent_engines` — confirmed by running both services together and calling the real canonical sequence end-to-end. Steps 1–5 above are verified working; step 6 onward is currently blocked on that service.
-
-## Repo layout
-
-```
-grid_engine/                 Person 1 — power-flow simulation, forecasting, validation, faults, API
-agent_engines/                Person 2 — offers, market clearing, settlement
-orchestrator/                    Person 3 — drives the full loop, dashboard, blockchain record (structure TBD)
-shared/                          contracts.py — pydantic request/response shapes shared by all three services
-INTEGRATION_GUIDELINES.md        cross-service source of truth — read this first
-```
-
-Each service currently lives on its own branch (`grid-infra`, `agent-engine`, and the orchestrator's) pending a merge into `main`.
+Both `dashboard/` and `gateway/` can be separate Vercel projects from the
+same GitHub repo — Vercel lets you set a subdirectory as a project's root,
+so there's no need to split this into separate repos.

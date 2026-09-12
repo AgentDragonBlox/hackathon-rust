@@ -15,7 +15,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from schemas.contracts import (
+from shared.contracts import (
     AssetState,
     GridState,
     NetworkState,

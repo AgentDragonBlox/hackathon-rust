@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import uuid
 
-from schemas.contracts import AgentOffer, FlexibilityRequest, GridState, ProposedAction, Trade
+from shared.contracts import AgentOffer, FlexibilityRequest, GridState, ProposedAction, Trade
 
 # Which assets can offer what, and roughly how much / at what cost.
 # (Purely illustrative numbers for a convincing mock demo.)

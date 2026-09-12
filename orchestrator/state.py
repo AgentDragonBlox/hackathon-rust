@@ -15,7 +15,7 @@ from datetime import datetime
 from fastapi import WebSocket
 
 from orchestrator.blockchain.ledger import SimulatedLedger
-from schemas.contracts import (
+from shared.contracts import (
     GridState,
     ReserveContract,
     SystemEvent,

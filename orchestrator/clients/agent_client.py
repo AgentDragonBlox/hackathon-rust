@@ -12,7 +12,7 @@ import os
 
 import httpx
 
-from schemas.contracts import AgentOffer, FlexibilityRequest, GridState, ProposedAction, Trade
+from shared.contracts import AgentOffer, FlexibilityRequest, GridState, ProposedAction, Trade
 
 AGENT_ENGINE_URL = os.environ.get("AGENT_ENGINE_URL", "http://localhost:8002")
 TIMEOUT_SECONDS = 3.0

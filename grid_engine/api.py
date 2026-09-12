@@ -80,6 +80,15 @@ from shared.contracts import (
 
 app = FastAPI(title="Grid Engine API")
 
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # fine for local dev; tighten before any real deployment
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Pristine baseline -- never mutated after this point. Every rebuild of
 # `_net` starts from a deep copy of this, never from `_net` itself.
 _baseline_net = build_campus_network()

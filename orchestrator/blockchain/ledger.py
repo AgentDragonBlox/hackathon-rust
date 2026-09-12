@@ -12,7 +12,7 @@ import hashlib
 import uuid
 from datetime import datetime
 
-from schemas.contracts import BlockchainTransaction
+from shared.contracts import BlockchainTransaction
 
 
 class SimulatedLedger:

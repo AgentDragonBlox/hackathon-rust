@@ -12,7 +12,7 @@ import os
 
 import httpx
 
-from schemas.contracts import (
+from shared.contracts import (
     ClearFaultRequest,
     FaultInjectionRequest,
     GridState,

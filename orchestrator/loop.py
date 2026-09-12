@@ -25,7 +25,7 @@ from datetime import datetime
 from orchestrator.clients import AgentClientAdapter, GridClientAdapter
 from orchestrator.logging_config import log
 from orchestrator.state import state
-from schemas.contracts import FlexibilityRequest, GridState, Prediction, Trade
+from shared.contracts import FlexibilityRequest, GridState, Prediction, Trade
 
 TICK_INTERVAL_SECONDS = 2.0
 CALL_TIMEOUT_SECONDS = 3.0

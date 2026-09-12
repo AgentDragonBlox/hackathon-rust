@@ -1,0 +1,11 @@
+[workspace]
+resolver = "2"
+members = [
+    "agent_engines_rs",
+]
+
+# grid_engine_rs and orchestrator_rs join this list as they're built.
+# Kept as a real Cargo workspace (not separate standalone crates) so a
+# single `cargo build`/`cargo test` at the repo root can eventually build
+# and test everything, mirroring how `pytest` at the repo root already
+# runs the whole Python test suite.
