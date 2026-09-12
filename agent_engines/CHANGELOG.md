@@ -12,6 +12,27 @@ is the detail; the guidelines file is what surfaces that detail exists.
 
 ---
 
+## 2026-09-12 — Added: automated pytest suite + CI workflow
+
+**What changed:** Real, repeatable tests replacing the manual
+uvicorn+httpx verification used during development — `test_agents.py`
+(11 tests, pure agent logic), `test_clearing.py` (6 tests, merit-order/
+fairness/settlement), `test_api.py` (11 tests, full route surface via
+FastAPI's `TestClient` — no real server needed). 28 tests, all passing,
+under a second to run. Also added `.github/workflows/agent_engines_tests.yml`
+— runs on every push/PR touching `agent_engines/` or `shared/`.
+
+**Why:** direct response to the settle/reserve-never-pushed incident.
+CI running on exactly what's in a branch (not what's on someone's
+laptop) would have caught that the moment it happened, automatically —
+no need for Person 1 to manually merge branches and test by hand to
+discover it.
+
+**Action needed — Person 1 / Person 3:** none — purely additive testing
+infrastructure on this service, no behavior or contract change.
+
+---
+
 ## 2026-09-12 — Fix: no flexibility source existed for F3 (factory-only feeder)
 
 **What happened:** Person 1's grid_engine `INTEGRATION.md` revealed the
