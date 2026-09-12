@@ -1,0 +1,41 @@
+name: agent_engines tests
+
+# Runs on every push/PR that touches agent_engines or the shared contract.
+# This exists specifically because of a real incident: settle/reserve
+# endpoints were tested locally and verified working, but never actually
+# landed in a push — nobody found out until Person 1 manually merged
+# branches and tested by hand. CI running on exactly what's in the branch
+# (not what's on someone's laptop) catches that automatically, the moment
+# it happens, without needing another teammate to notice.
+
+"on":
+  push:
+    paths:
+      - "agent_engines/**"
+      - "shared/**"
+  pull_request:
+    paths:
+      - "agent_engines/**"
+      - "shared/**"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r agent_engines/requirements.txt
+
+      - name: Run test suite
+        run: python -m pytest agent_engines/tests/ -v
+
+      - name: Confirm the standalone smoke-test harness also runs
+        run: |
+          python -m uvicorn agent_engines.main:app --port 8002 &
+          sleep 2
+          python -m agent_engines.run_market
