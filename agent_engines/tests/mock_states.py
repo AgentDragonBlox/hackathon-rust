@@ -66,7 +66,7 @@ BATTERY_NEAR_RESERVE = OffersRequest(
 # EV_SECONDS_UNTIL_DEADLINE (in ev_agent.py) needs asset_id "ev-2" set below
 # 300 seconds before running this one, to exercise the "refuses near
 # deadline" path:
-#   from agent_engine.agents import ev_agent
+#   from agent_engines.agents import ev_agent
 #   ev_agent.EV_SECONDS_UNTIL_DEADLINE["ev-2"] = 120
 EV_DEADLINE_IMMINENT = OffersRequest(
     grid_state=GridState(
@@ -87,8 +87,29 @@ EV_DEADLINE_IMMINENT = OffersRequest(
                                   reason="F2 predicted overload")],
 )
 
+# Regression test for a real gap grid_engine's actual topology surfaced:
+# F3 connects ONLY to a factory-type asset. Before factory_agent.py
+# existed, this scenario returned zero offers and could never be
+# resolved. Keep this scenario in the suite so that gap can't silently
+# come back.
+F3_FACTORY_ONLY = OffersRequest(
+    grid_state=GridState(
+        timestamp=datetime.now(),
+        assets=[
+            AssetState(asset_id="fac-1", asset_type="factory", current_load_kw=150.0),
+        ],
+        feeders=[_feeder("F3", 105.0, ["fac-1"])],
+        predictions=[Prediction(feeder_id="F3", predicted_overload=True,
+                                 eta_seconds=200, confidence=0.85)],
+    ),
+    requests=[FlexibilityRequest(request_id="req-f3", feeder_id="F3", kw_needed=20.0,
+                                  deadline_seconds=180,
+                                  reason="F3 predicted overload")],
+)
+
 ALL_MOCK_REQUESTS = {
     "normal_overload": NORMAL_OVERLOAD,
     "battery_near_reserve": BATTERY_NEAR_RESERVE,
     "ev_deadline_imminent": EV_DEADLINE_IMMINENT,
+    "f3_factory_only": F3_FACTORY_ONLY,
 }
