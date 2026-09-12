@@ -187,26 +187,3 @@ class ClearMarketRequest(BaseModel):
 class FaultInjectionRequest(BaseModel):
     feeder_id: str
     fault_type: Literal["solar_drop", "demand_spike", "feeder_overload", "battery_failure", "grid_outage", "line_fault"]
-
-
-# ---------------------------------------------------------------------------
-# COMPOSITE REQUEST/RESPONSE SHAPES FOR THE PERSON 1 (GRID ENGINE) ENDPOINTS
-# (not core domain objects, just wire shapes for POST /grid/validate -- added
-# by Person 1, following the same pattern as the Person-2 composite shapes
-# above. See grid_engine/INTEGRATION.md for the endpoint docs, verified
-# example payloads, and known gaps.)
-# ---------------------------------------------------------------------------
-
-
-class ValidateActionsRequest(BaseModel):
-    actions: list[ProposedAction]
-
-
-class ClearFaultRequest(BaseModel):
-    """Milestone 6: wire shape for POST /grid/fault/clear. `feeder_id`
-    matches the registry key GridState.active_faults reports -- for every
-    fault_type except grid_outage that's the feeder_id it was injected
-    with; for grid_outage it's the synthetic value "GRID" (grid_outage
-    isn't actually feeder-scoped -- see grid_engine/faults.py's module
-    docstring). See grid_engine/INTEGRATION.md for the full write-up."""
-    feeder_id: str
