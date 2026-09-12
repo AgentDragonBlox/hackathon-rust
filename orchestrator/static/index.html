@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Microgrid Resilience Exchange</title>
+<style>
+  :root {
+    --bg: #0b0e14;
+    --panel: #131722;
+    --panel-border: #232838;
+    --text: #e6e9ef;
+    --text-dim: #8a91a3;
+    --green: #3ddc84;
+    --yellow: #f5c542;
+    --red: #f5544a;
+    --blue: #4d8ef5;
+    --purple: #b06cf5;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+  }
+  #topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--panel-border);
+  }
+  #topbar h1 {
+    font-size: 16px;
+    margin: 0;
+    margin-right: auto;
+    font-weight: 600;
+  }
+  #conn-status {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: #222;
+  }
+  #conn-status.connected { background: rgba(61,220,132,0.15); color: var(--green); }
+  #conn-status.disconnected { background: rgba(245,84,74,0.15); color: var(--red); }
+
+  button.scenario-btn {
+    background: #1c2233;
+    color: var(--text);
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  button.scenario-btn:hover { background: #262e45; }
+  button.scenario-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  button#reset-btn {
+    background: rgba(77,142,245,0.15);
+    color: var(--blue);
+    border: 1px solid rgba(77,142,245,0.3);
+  }
+
+  #layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    grid-template-rows: 1fr 220px;
+    gap: 12px;
+    padding: 12px;
+    height: calc(100vh - 53px);
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 10px;
+    padding: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .panel h2 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    margin: 0 0 10px 0;
+  }
+
+  #map-panel { grid-column: 1; grid-row: 1; }
+  #status-panel { grid-column: 2; grid-row: 1; overflow-y: auto; }
+  #log-panel { grid-column: 1 / span 2; grid-row: 2; }
+
+  .status-row { margin-bottom: 14px; }
+  .status-label { color: var(--text-dim); font-size: 11px; margin-bottom: 4px; }
+  .status-value { font-size: 18px; font-weight: 600; }
+  .bar-bg {
+    background: #1c2233;
+    border-radius: 4px;
+    height: 8px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  .bar-fill { height: 100%; transition: width 0.4s ease, background 0.4s ease; }
+
+  #log-scroll {
+    flex: 1;
+    overflow-y: auto;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .log-line { white-space: pre-wrap; }
+  .log-time { color: var(--text-dim); }
+  .log-source { font-weight: 600; }
+  .sev-warning .log-source { color: var(--yellow); }
+  .sev-error .log-source { color: var(--red); }
+  .sev-info .log-source { color: var(--blue); }
+
+  svg text { fill: var(--text); font-size: 11px; }
+  .feeder-line { stroke-width: 4; transition: stroke 0.4s ease; }
+  .asset-node circle { stroke-width: 2; transition: stroke 0.4s ease; }
+
+  #blockchain-strip {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    margin-top: 10px;
+    padding-bottom: 4px;
+  }
+  .block-chip {
+    flex: 0 0 auto;
+    background: #1c2233;
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  .block-chip b { color: var(--purple); }
+
+  #resilience-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .island-region rect {
+    transition: all 0.5s ease;
+  }
+  .island-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <h1>Microgrid Resilience Exchange</h1>
+  <button class="scenario-btn" onclick="triggerScenario('solar_drop')">Solar Drop</button>
+  <button class="scenario-btn" onclick="triggerScenario('demand_spike')">Demand Spike</button>
+  <button class="scenario-btn" onclick="triggerScenario('feeder_overload')">Feeder Overload</button>
+  <button class="scenario-btn" onclick="triggerScenario('battery_failure')">Battery Failure</button>
+  <button class="scenario-btn" onclick="triggerScenario('grid_outage')">Grid Outage</button>
+  <button class="scenario-btn" onclick="triggerScenario('line_fault')">Line Fault</button>
+  <button class="scenario-btn" id="reset-btn" onclick="resetScenario()">Reset</button>
+  <span id="conn-status" class="disconnected">connecting...</span>
+</div>
+
+<div id="layout">
+  <div class="panel" id="map-panel">
+    <h2>Network Topology</h2>
+    <svg id="network-svg" viewBox="0 0 700 380" style="width:100%; flex:1;"></svg>
+  </div>
+
+  <div class="panel" id="status-panel">
+    <h2>System Status</h2>
+    <div id="status-content"></div>
+    <h2 style="margin-top:16px;">Blockchain</h2>
+    <div id="blockchain-strip"></div>
+  </div>
+
+  <div class="panel" id="log-panel">
+    <h2>Agent Activity</h2>
+    <div id="log-scroll"></div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "";
+const WS_URL = (location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/ws/dashboard";
+
+let ws = null;
+let latestSnapshot = null;
+let renderedEventIds = new Set();
+
+// Layout is computed dynamically from whatever GridState actually
+// contains — NOT hardcoded to specific asset_ids. This matters because
+// the mock uses ids like "hosp_battery"/"academic1" with 2 feeders
+// (F1/F2), while Person 1's real grid_engine uses "hosp-1"/"acad-1"
+// etc. with 3 feeders plus a synthetic "TRANSFORMER" entry — hardcoded
+// id-keyed positions would render a blank map the moment GRID_SOURCE
+// flips to live.
+const TYPE_COLOR = {
+  hospital: "#f5544a", academic: "#4d8ef5", factory: "#b06cf5",
+  battery: "#3ddc84", solar: "#f5c542", ev: "#4d8ef5", utility: "#8a91a3",
+};
+const ASSET_ICON = {
+  hospital: "H", academic: "A", factory: "F",
+  battery: "B", solar: "S", ev: "EV", utility: "U",
+};
+
+function computeLayout(gs) {
+  // "TRANSFORMER" is a synthetic aggregate feeder_id grid_engine adds —
+  // it has no assets of its own beyond the union of everyone else's, so
+  // it's excluded from the topology drawing (still shown as a loading
+  // bar in the status panel, since that's a real physical constraint).
+  const feeders = gs.feeders.filter(f => f.feeder_id !== "TRANSFORMER");
+  const hubY = 200;
+  const n = Math.max(feeders.length, 1);
+  const spacing = 700 / (n + 1);
+
+  const hubs = {};
+  const positions = {};
+
+  feeders.forEach((feeder, i) => {
+    const hubX = spacing * (i + 1);
+    hubs[feeder.feeder_id] = { x: hubX, y: hubY };
+
+    const assets = feeder.connected_assets;
+    const upCount = Math.ceil(assets.length / 2);
+    assets.forEach((assetId, j) => {
+      const above = j < upCount;
+      const sideCount = above ? upCount : assets.length - upCount;
+      const indexInSide = above ? j : j - upCount;
+      const spread = 120;
+      const xOffset = sideCount > 1 ? (indexInSide - (sideCount - 1) / 2) * spread : 0;
+      positions[assetId] = { x: hubX + xOffset, y: above ? hubY - 140 : hubY + 140 };
+    });
+  });
+
+  return { hubs, positions };
+}
+
+function connect() {
+  ws = new WebSocket(WS_URL);
+  ws.onopen = () => setConnStatus(true);
+  ws.onclose = () => { setConnStatus(false); setTimeout(connect, 2000); };
+  ws.onerror = () => ws.close();
+  ws.onmessage = (evt) => {
+    const msg = JSON.parse(evt.data);
+    if (msg.type === "state_update") {
+      latestSnapshot = msg.data;
+      render();
+    }
+  };
+}
+
+function setConnStatus(connected) {
+  const el = document.getElementById("conn-status");
+  el.textContent = connected ? "live" : "reconnecting…";
+  el.className = connected ? "connected" : "disconnected";
+}
+
+async function triggerScenario(name) {
+  await fetch(`${API_BASE}/scenario/${name}`, { method: "POST" });
+}
+async function resetScenario() {
+  const resp = await fetch(`${API_BASE}/scenario/reset`, { method: "POST" });
+  if (resp.ok) {
+    renderedEventIds.clear();
+    document.getElementById("log-scroll").innerHTML = "";
+  } else {
+    console.error("Reset failed:", resp.status, await resp.text());
+  }
+}
+
+function statusColor(percent) {
+  if (percent >= 100) return "var(--red)";
+  if (percent >= 80) return "var(--yellow)";
+  return "var(--green)";
+}
+
+// Nominal assumptions for the demo — not physically calibrated, just
+// enough to make a believable resilience estimate. See Person 2's
+// INTEGRATION.md gap notes: real critical-load fraction and battery
+// capacity_kwh should eventually come from AssetState, once/if the
+// team decides to extend the shared contract. Using the same 5%
+// critical-load assumption Person 2's agent engine already uses, so
+// our number and his stay consistent with each other.
+const BATTERY_CAPACITY_KWH = 100;
+const CRITICAL_LOAD_FRACTION = 0.05;
+const MAX_HORIZON_HOURS = 8; // gauge caps out (reads as "fully resilient") at this many hours
+
+function computeResilience(gs) {
+  const battery = gs.assets.find(a => a.asset_type === "battery");
+  const hospital = gs.assets.find(a => a.asset_type === "hospital");
+  if (!battery || !hospital || battery.soc_percent == null) {
+    return { hours: null, fraction: 0, color: "var(--text-dim)", label: "No hospital battery data" };
+  }
+
+  if (!battery.online) {
+    return {
+      hours: 0,
+      fraction: 0,
+      color: "var(--red)",
+      label: "Battery OFFLINE \u2014 no backup power available",
+      isIslanded: (gs.islands || []).some(group => group.includes(hospital.asset_id)),
+    };
+  }
+
+  const isIslanded = (gs.islands || []).some(group => group.includes(hospital.asset_id));
+  const reservePercent = battery.min_reserve_percent ?? 0;
+  const usableKwh = Math.max((battery.soc_percent - reservePercent) / 100 * BATTERY_CAPACITY_KWH, 0);
+  const criticalDrawKw = Math.max(hospital.current_load_kw * CRITICAL_LOAD_FRACTION, 1);
+  const hours = usableKwh / criticalDrawKw;
+  const fraction = Math.min(hours / MAX_HORIZON_HOURS, 1);
+
+  let color = "var(--green)";
+  if (hours < 1) color = "var(--red)";
+  else if (hours < 4) color = "var(--yellow)";
+
+  const label = isIslanded
+    ? `On island power \u2014 covering ~${criticalDrawKw.toFixed(0)} kW critical load`
+    : `Estimated if grid were lost right now`;
+
+  return { hours, fraction, color, label, isIslanded };
+}
+
+function render() {
+  if (!latestSnapshot) return;
+  renderStatus(latestSnapshot);
+  renderNetwork(latestSnapshot);
+  renderLog(latestSnapshot);
+  renderBlockchain(latestSnapshot);
+}
+
+function renderStatus(snap) {
+  const gs = snap.grid_state;
+  const el = document.getElementById("status-content");
+  if (!gs) { el.innerHTML = "<div class='status-label'>No grid data yet</div>"; return; }
+
+  const totalDemand = gs.assets.reduce((s, a) => s + a.current_load_kw, 0);
+  const totalGen = gs.assets.reduce((s, a) => s + a.current_gen_kw, 0);
+  const battery = gs.assets.find(a => a.asset_type === "battery");
+
+  let html = `
+    <div class="status-row">
+      <div class="status-label">Total Demand</div>
+      <div class="status-value">${totalDemand.toFixed(0)} kW</div>
+    </div>
+    <div class="status-row">
+      <div class="status-label">Renewable Generation</div>
+      <div class="status-value">${totalGen.toFixed(0)} kW</div>
+    </div>
+  `;
+
+  if (battery) {
+    const soc = battery.soc_percent ?? 0;
+    html += `
+      <div class="status-row">
+        <div class="status-label">Hospital Battery SOC ${battery.online ? "" : "(OFFLINE)"}</div>
+        <div class="status-value">${soc.toFixed(0)}%</div>
+        <div class="bar-bg"><div class="bar-fill" style="width:${soc}%; background:${statusColor(100-soc)}"></div></div>
+      </div>
+    `;
+  }
+
+  for (const feeder of gs.feeders) {
+    const pct = Math.min(feeder.loading_percent, 100);
+    html += `
+      <div class="status-row">
+        <div class="status-label">Feeder ${feeder.feeder_id} — ${feeder.status}</div>
+        <div class="status-value">${feeder.loading_percent.toFixed(0)}%</div>
+        <div class="bar-bg"><div class="bar-fill" style="width:${pct}%; background:${statusColor(feeder.loading_percent)}"></div></div>
+      </div>
+    `;
+  }
+
+  for (const pred of gs.predictions) {
+    if (pred.predicted_overload) {
+      const mins = pred.eta_seconds != null ? Math.round(pred.eta_seconds / 60) : "?";
+      html += `<div class="status-row" style="color:var(--yellow); font-size:12px;">⚠ Feeder ${pred.feeder_id} overload predicted in ${mins}m</div>`;
+    }
+  }
+
+  const res = computeResilience(gs);
+  const circumference = 2 * Math.PI * 28;
+  const dash = res.fraction * circumference;
+  const hoursText = res.hours == null ? "—" : (res.hours >= MAX_HORIZON_HOURS ? `${MAX_HORIZON_HOURS}h+` : `${res.hours.toFixed(1)}h`);
+
+  html += `
+    <div class="status-row" id="resilience-row">
+      <svg width="70" height="70" viewBox="0 0 70 70">
+        <circle cx="35" cy="35" r="28" fill="none" stroke="#1c2233" stroke-width="8"/>
+        <circle cx="35" cy="35" r="28" fill="none" stroke="${res.color}" stroke-width="8"
+          stroke-linecap="round" stroke-dasharray="${dash} ${circumference}"
+          transform="rotate(-90 35 35)" style="transition: stroke-dasharray 0.5s ease;" />
+        <text x="35" y="40" text-anchor="middle" font-size="13" font-weight="700" fill="var(--text)">${hoursText}</text>
+      </svg>
+      <div>
+        <div class="status-label">Hospital Resilience Horizon</div>
+        <div style="font-size:12px; color:${res.hours === 0 ? "var(--red)" : res.isIslanded ? "var(--yellow)" : "var(--text-dim)"};">${res.label}</div>
+      </div>
+    </div>
+  `;
+
+  el.innerHTML = html;
+}
+
+function renderNetwork(snap) {
+  const gs = snap.grid_state;
+  const svg = document.getElementById("network-svg");
+  if (!gs) return;
+
+  const { hubs, positions } = computeLayout(gs);
+
+  let regionParts = [];
+  let parts = [];
+  let islandLegend = [];
+
+  const ISLAND_COLORS = ["var(--yellow)", "var(--purple)", "var(--blue)", "var(--green)"];
+
+  // Draw island boundary regions FIRST so they sit behind everything else.
+  if (gs.islands && gs.islands.length > 1) {
+    gs.islands.forEach((group, idx) => {
+      const points = group
+        .map(id => positions[id])
+        .filter(Boolean);
+      const feeder = gs.feeders.find(f => f.connected_assets.every(a => group.includes(a)));
+      if (feeder && hubs[feeder.feeder_id]) points.push(hubs[feeder.feeder_id]);
+      if (points.length === 0) return;
+
+      const pad = 45;
+      const minX = Math.min(...points.map(p => p.x)) - pad;
+      const maxX = Math.max(...points.map(p => p.x)) + pad;
+      const minY = Math.min(...points.map(p => p.y)) - pad;
+      const maxY = Math.max(...points.map(p => p.y)) + pad;
+      const color = ISLAND_COLORS[idx % ISLAND_COLORS.length];
+
+      regionParts.push(`
+        <rect x="${minX}" y="${minY}" width="${maxX - minX}" height="${maxY - minY}"
+              rx="18" fill="${color}" fill-opacity="0.06" stroke="${color}" stroke-opacity="0.5"
+              stroke-width="1.5" stroke-dasharray="6 5" class="island-region" />
+      `);
+      islandLegend.push({ label: `Island ${idx + 1}`, color });
+    });
+  }
+
+  // feeder lines: hub -> each connected asset
+  for (const feeder of gs.feeders) {
+    const hub = hubs[feeder.feeder_id];
+    if (!hub) continue; // synthetic TRANSFORMER feeder has no hub — skipped by design
+    const color = feeder.status === "faulted" || feeder.status === "islanded"
+      ? "var(--red)"
+      : feeder.loading_percent >= 100 ? "var(--red)"
+      : feeder.loading_percent >= 80 ? "var(--yellow)"
+      : "var(--green)";
+    const dash = feeder.status === "islanded" ? 'stroke-dasharray="5 4"' : "";
+    for (const assetId of feeder.connected_assets) {
+      const pos = positions[assetId];
+      if (!pos) continue;
+      const asset = gs.assets.find(a => a.asset_id === assetId);
+      const disconnected = asset && !asset.online;
+      const lineColor = disconnected ? "#4a4f5e" : color;
+      const lineDash = disconnected ? 'stroke-dasharray="3 4"' : dash;
+      parts.push(`<line class="feeder-line" x1="${hub.x}" y1="${hub.y}" x2="${pos.x}" y2="${pos.y}" stroke="${lineColor}" ${lineDash} />`);
+    }
+    const hubStroke = feeder.status === "islanded" ? "var(--yellow)" : color;
+    const hubDash = feeder.status === "islanded" ? 'stroke-dasharray="3 3"' : "";
+    parts.push(`<circle cx="${hub.x}" cy="${hub.y}" r="10" fill="#1c2233" stroke="${hubStroke}" stroke-width="2" ${hubDash} />`);
+    parts.push(`<text x="${hub.x}" y="${hub.y - 16}" text-anchor="middle">${feeder.feeder_id}</text>`);
+  }
+
+  // asset nodes
+  for (const asset of gs.assets) {
+    const pos = positions[asset.asset_id];
+    if (!pos) continue;
+    const typeColor = TYPE_COLOR[asset.asset_type] || "#8a91a3";
+    const strokeColor = asset.online ? typeColor : "var(--red)";
+    const dashAttr = asset.online ? "" : 'stroke-dasharray="4 3"';
+    const icon = ASSET_ICON[asset.asset_type] || "•";
+    parts.push(`
+      <g class="asset-node">
+        <circle cx="${pos.x}" cy="${pos.y}" r="26" fill="#1c2233" stroke="${strokeColor}" ${dashAttr} />
+        <text x="${pos.x}" y="${pos.y + 6}" text-anchor="middle" font-size="15" font-weight="700" fill="${strokeColor}">${icon}</text>
+        <text x="${pos.x}" y="${pos.y + 44}" text-anchor="middle" fill="#8a91a3">${asset.asset_id}</text>
+      </g>
+    `);
+  }
+
+  svg.innerHTML = regionParts.join("\n") + parts.join("\n") + renderIslandLegend(islandLegend);
+}
+
+function renderIslandLegend(legend) {
+  if (legend.length === 0) return "";
+  // Fixed HUD position, top-left of the canvas — deliberately NOT tied to
+  // any node's coordinates, so it can never collide with a node label
+  // regardless of how the topology or padding shifts.
+  let y = 20;
+  const chips = legend.map(item => {
+    const chip = `
+      <rect x="8" y="${y - 10}" width="10" height="10" rx="2" fill="${item.color}" />
+      <text x="24" y="${y}" font-size="11" font-weight="600" fill="${item.color}">${item.label}</text>
+    `;
+    y += 18;
+    return chip;
+  }).join("\n");
+  return `<g>${chips}</g>`;
+}
+
+function renderLog(snap) {
+  const el = document.getElementById("log-scroll");
+  const wasAtBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 10;
+
+  for (const evt of snap.recent_events) {
+    if (renderedEventIds.has(evt.event_id)) continue;
+    renderedEventIds.add(evt.event_id);
+
+    const time = new Date(evt.timestamp).toLocaleTimeString();
+    const line = document.createElement("div");
+    line.className = `log-line sev-${evt.severity}`;
+    line.innerHTML = `<span class="log-time">${time}</span> <span class="log-source">${evt.source}</span> ${evt.message}`;
+    el.appendChild(line);
+  }
+
+  if (wasAtBottom) el.scrollTop = el.scrollHeight;
+}
+
+function renderBlockchain(snap) {
+  const el = document.getElementById("blockchain-strip");
+  el.innerHTML = snap.blockchain.map(tx => `
+    <div class="block-chip"><b>#${tx.block_number}</b> ${tx.tx_type.replace("_"," ")}</div>
+  `).join("");
+}
+
+connect();
+</script>
+</body>
+</html>
