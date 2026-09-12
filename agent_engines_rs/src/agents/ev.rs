@@ -68,3 +68,36 @@ pub fn generate_offer(
         rejection_reason: None,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn request() -> FlexibilityRequest {
+        FlexibilityRequest { request_id: "r".into(), feeder_id: "F2".into(), kw_needed: 10.0, deadline_seconds: 180.0, reason: "t".into() }
+    }
+
+    #[test]
+    fn offers_when_no_urgency_set() {
+        let asset = AssetState { asset_id: "ev-1".into(), asset_type: "ev".into(), current_load_kw: 20.0, current_gen_kw: 0.0, soc_percent: None, min_reserve_percent: None, online: true };
+        let offer = generate_offer(&asset, &request(), &HashMap::new());
+        assert!(!offer.rejected);
+        assert_eq!(offer.kw_offered, 20.0 * FLEXIBLE_FRACTION);
+    }
+
+    #[test]
+    fn rejects_near_deadline() {
+        let asset = AssetState { asset_id: "ev-urgent".into(), asset_type: "ev".into(), current_load_kw: 20.0, current_gen_kw: 0.0, soc_percent: None, min_reserve_percent: None, online: true };
+        let mut deadlines = HashMap::new();
+        deadlines.insert("ev-urgent".to_string(), 100.0);
+        let offer = generate_offer(&asset, &request(), &deadlines);
+        assert!(offer.rejected);
+    }
+
+    #[test]
+    fn rejects_when_no_active_charging() {
+        let asset = AssetState { asset_id: "ev-idle".into(), asset_type: "ev".into(), current_load_kw: 0.0, current_gen_kw: 0.0, soc_percent: None, min_reserve_percent: None, online: true };
+        let offer = generate_offer(&asset, &request(), &HashMap::new());
+        assert!(offer.rejected);
+    }
+}

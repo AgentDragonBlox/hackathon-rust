@@ -19,4 +19,15 @@ pytest==9.1.1
 # current and more portable across Python versions than anything pinned
 # here from one dev's environment.
 fastapi
-uvicorn
+
+# [standard] is REQUIRED, not optional. Bare `uvicorn` does NOT include
+# WebSocket support -- orchestrator/main.py's /ws/dashboard endpoint needs
+# it. Without this extra, every WebSocket upgrade request 404s and uvicorn
+# logs "No supported WebSocket library detected" instead of connecting.
+# This is a real incident this project hit once already -- don't drop the
+# [standard] extra when touching this line.
+uvicorn[standard]
+
+# Used by orchestrator's real HTTP clients (clients/agent_client.py,
+# clients/grid_client.py) to call grid_engine and agent_engines_rs.
+httpx
