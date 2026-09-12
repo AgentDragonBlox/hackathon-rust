@@ -1,0 +1,51 @@
+# Combined .gitignore — merged from all three teammates
+# Person 1 (grid_engine) + Person 2 (agent_engines) + Person 3 (orchestrator)
+
+# Python bytecode / cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+agentvenv/
+
+# Distribution / packaging
+build/
+dist/
+
+# Testing / tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment variables / secrets
+.env
+.env.*
+.env.local
+
+# Editor / OS cruft
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Logs / local scratch
+*.log
+orchestrator.log
+
+# In case a Rust component ever gets added
+target/
+
+# In case the dashboard side ends up using Node
+node_modules/
