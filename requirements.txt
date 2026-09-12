@@ -1,0 +1,22 @@
+# Grid engine dependencies (Person 1)
+#
+# Only pandapower's own version (and pytest, for running tests) is pinned.
+# pandas/numpy/scipy are deliberately left UNPINNED: pandapower declares
+# different transitive version constraints on these depending on your
+# Python version (e.g. it requires scipy~=1.16 on Python 3.11 but
+# scipy~=1.18 on Python 3.12). Hard-pinning exact versions here (as an
+# earlier version of this file did) broke `pip install` for anyone on a
+# different Python version than the one the pins were taken from -- let
+# pip resolve pandas/numpy/scipy from pandapower's own requirements
+# instead, whatever they are for your interpreter.
+pandapower==3.5.4
+pytest==9.1.1
+
+# Milestone 5: thin HTTP wrapper (grid_engine/api.py) so Person 3's
+# orchestrator can call grid_engine the same way it calls Person 2's
+# agent_engines service. Versions left unpinned deliberately, same
+# reasoning as above -- fastapi/uvicorn's own transitive pins are more
+# current and more portable across Python versions than anything pinned
+# here from one dev's environment.
+fastapi
+uvicorn
