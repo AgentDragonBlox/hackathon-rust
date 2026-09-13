@@ -29,8 +29,8 @@ one first**, then go to the specific service doc you actually need.
 | Service | Owner | Port | Doc | Status (as of last sync) |
 |---|---|---|---|---|
 | grid_engine | Person 1 | 8001 | `grid_engine/INTEGRATION.md` | 98/98 tests passing, real pandapower AC power flow + Milestone 6 fault injection (real topology-based islanding, not simulated) |
-| agent_engines | Person 2 | 8002 | `agent_engines/INTEGRATION.md` | Confirmed working end-to-end, tested against a real running server |
-| orchestrator | Person 3 | — | *(not written yet)* | Runs the full loop against both services above |
+| agent_engines_rs | Person 2 | 8002 | *(this fork only — see note below)* | **Rewritten in Rust**, replaces the Python `agent_engines`. Same wire contract, verified byte-for-byte identical behavior. 17 unit tests (`cargo test`). This is a fork-specific experiment — the original Python `agent_engines` is preserved unmodified on `andrew-0228/3rd_sem_hacka`. |
+| orchestrator | Person 3 | — | *(not written yet)* | Runs the full loop against both services above — confirmed working live against `agent_engines_rs` (real fault injection, real settlement, real blockchain ledger entries) |
 
 ## Canonical call sequence (current, whole-system)
 

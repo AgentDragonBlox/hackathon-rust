@@ -42,3 +42,33 @@ pub fn generate_offer(asset: &AssetState, request: &FlexibilityRequest) -> Agent
         rejection_reason: None,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn offers_when_above_reserve() {
+        let asset = AssetState { asset_id: "batt-1".into(), asset_type: "battery".into(), current_load_kw: 0.0, current_gen_kw: 0.0, soc_percent: Some(73.0), min_reserve_percent: Some(20.0), online: true };
+        let request = FlexibilityRequest { request_id: "r".into(), feeder_id: "F1".into(), kw_needed: 10.0, deadline_seconds: 180.0, reason: "t".into() };
+        let offer = generate_offer(&asset, &request);
+        assert!(!offer.rejected);
+        assert!(offer.kw_offered > 0.0);
+    }
+
+    #[test]
+    fn rejects_at_reserve_floor() {
+        let asset = AssetState { asset_id: "batt-2".into(), asset_type: "battery".into(), current_load_kw: 0.0, current_gen_kw: 0.0, soc_percent: Some(20.0), min_reserve_percent: Some(20.0), online: true };
+        let request = FlexibilityRequest { request_id: "r".into(), feeder_id: "F1".into(), kw_needed: 10.0, deadline_seconds: 180.0, reason: "t".into() };
+        let offer = generate_offer(&asset, &request);
+        assert!(offer.rejected);
+    }
+
+    #[test]
+    fn uses_default_reserve_when_unset() {
+        let asset = AssetState { asset_id: "batt-3".into(), asset_type: "battery".into(), current_load_kw: 0.0, current_gen_kw: 0.0, soc_percent: Some(50.0), min_reserve_percent: None, online: true };
+        let request = FlexibilityRequest { request_id: "r".into(), feeder_id: "F1".into(), kw_needed: 10.0, deadline_seconds: 180.0, reason: "t".into() };
+        let offer = generate_offer(&asset, &request);
+        assert!(!offer.rejected); // 50% > default 20% reserve
+    }
+}

@@ -36,3 +36,20 @@ pub fn generate_offer(asset: &AssetState, request: &FlexibilityRequest) -> Agent
         rejection_reason: None,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn f3_factory_only_scenario_offers_correctly() {
+        // Regression test for the real gap grid_engine's topology surfaced:
+        // F3 connects only to a factory-type asset.
+        let asset = AssetState { asset_id: "fac-1".into(), asset_type: "factory".into(), current_load_kw: 150.0, current_gen_kw: 0.0, soc_percent: None, min_reserve_percent: None, online: true };
+        let request = FlexibilityRequest { request_id: "req-f3".into(), feeder_id: "F3".into(), kw_needed: 20.0, deadline_seconds: 180.0, reason: "F3 overload".into() };
+        let offer = generate_offer(&asset, &request);
+        assert!(!offer.rejected);
+        assert_eq!(offer.kw_offered, 150.0 * FLEXIBLE_FRACTION);
+        assert_eq!(offer.offer_type, "production_flex");
+    }
+}

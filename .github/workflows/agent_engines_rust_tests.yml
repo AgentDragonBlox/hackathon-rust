@@ -1,0 +1,38 @@
+name: agent_engines_rs tests
+
+# Runs on every push/PR that touches the Rust crate. Separate from the
+# existing agent_engines_tests.yml (Python) -- that one watches
+# agent_engines/**, this one watches agent_engines_rs/**. They're
+# different codebases with different toolchains; a single combined
+# workflow would either skip one on every push or run irrelevant steps.
+
+"on":
+  push:
+    paths:
+      - "agent_engines_rs/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+  pull_request:
+    paths:
+      - "agent_engines_rs/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: cargo build -p agent_engines_rs --verbose
+
+      - name: Run test suite
+        run: cargo test -p agent_engines_rs --verbose
+
+      - name: Confirm the binary actually starts and answers requests
+        run: |
+          cargo run -p agent_engines_rs &
+          sleep 3
+          curl -sf http://localhost:8002/health
+          curl -sf -i -X GET http://localhost:8002/health -H "Origin: http://example.com" | grep -qi "access-control-allow-origin" || (echo "CORS header missing" && exit 1)
