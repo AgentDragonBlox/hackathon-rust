@@ -1,5 +1,26 @@
 # Grid Engine (Person 1) — Integration Guide
 
+## Public replay integration (2026-09-13)
+
+Default `GRID_DATA_MODE=public` applies a bundled OPSD hourly profile before
+reapplying active faults and solving AC power flow. `baseline` retains the
+fixed reference network described below. Shared contracts are unchanged.
+GET requests never advance playback.
+
+- `GET /grid/replay`: provenance, cursor and current input sample.
+- `POST /grid/replay/control`: JSON `action` is one of `play`, `pause`,
+  `step`, `restart`, `tick`; returns replay metadata. Step advances an hour
+  and pauses. Tick advances only when playing. Restart clears faults,
+  rewinds and pauses. The end of the week pauses automatically.
+- The orchestrator alone ticks playback before reading grid state. Clearing
+  faults rebuilds the current recorded sample. Routes share a process lock.
+- Grid timestamps are service observation times; recorded interval times
+  are separate in replay metadata. The orchestrator's trend fallback uses
+  the hourly sampling interval to estimate time to overload.
+
+Action needed: use the updated orchestrator with the replay grid. Baseline
+regression tests use `GRID_DATA_MODE=baseline`. See `data/README.md`.
+
 **For:** Person 2 (Agents/Market) and Person 3 (Orchestrator).
 
 This document was written after building AND actually running this

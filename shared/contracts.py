@@ -195,3 +195,24 @@ class FaultInjectionRequest(BaseModel):
 
 class ClearFaultRequest(BaseModel):
     feeder_id: str  # the registry key -- "GRID" for a grid_outage, the real feeder_id otherwise
+
+
+# ---------------------------------------------------------------------------
+# PHYSICAL FEEDBACK LOOP (settled actions -> live grid state)
+#
+# /grid/apply is the missing link flagged in README.md section 21/22:
+# validation and settlement previously had no way to change what the NEXT
+# /grid/state call reports. This wraps ProposedAction the same way
+# ValidateActionsRequest does, and returns one ApplyResult per action so a
+# caller can tell which settled trades actually took physical effect.
+# ---------------------------------------------------------------------------
+
+
+class ApplyActionsRequest(BaseModel):
+    actions: list[ProposedAction]
+
+
+class ApplyResult(BaseModel):
+    action_id: str
+    applied: bool
+    reason: Optional[str] = None  # set when applied=False (already applied, or an integration error)

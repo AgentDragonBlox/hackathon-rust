@@ -49,3 +49,8 @@ target/
 
 # In case the dashboard side ends up using Node
 node_modules/
+
+data/cache/
+.svelte-kit/
+.vercel/
+!.env.example

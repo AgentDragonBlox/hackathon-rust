@@ -1,0 +1,9 @@
+.git
+**/node_modules
+**/__pycache__
+**/.venv
+target
+data/cache
+.demo-logs
+dashboard/.svelte-kit
+dashboard/.vercel

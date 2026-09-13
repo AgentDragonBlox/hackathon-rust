@@ -8,8 +8,10 @@
 // themselves (see README.md's "Deployment topology" section), these will
 // point at a separate host (Fly.io/Railway/Render/etc.), not at Vercel.
 
-const AGENT_ENGINE_URL = import.meta.env.PUBLIC_AGENT_ENGINE_URL ?? 'http://localhost:8002';
-const GRID_ENGINE_URL = import.meta.env.PUBLIC_GRID_ENGINE_URL ?? 'http://localhost:8001';
+import { env } from '$env/dynamic/public';
+
+const AGENT_ENGINE_URL = (env.PUBLIC_AGENT_ENGINE_URL || 'http://localhost:8002').replace(/\/$/, '');
+const GRID_ENGINE_URL = (env.PUBLIC_GRID_ENGINE_URL || 'http://localhost:8001').replace(/\/$/, '');
 
 export interface AssetState {
 	asset_id: string;

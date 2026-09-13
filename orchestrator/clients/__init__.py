@@ -4,8 +4,8 @@ currently talking to. Controlled by env vars so you can flip either
 independently, at any time, including seconds before a demo, with no
 code changes.
 
-    GRID_SOURCE=mock|live   (default: mock)
-    AGENT_SOURCE=mock|live  (default: mock)
+    GRID_SOURCE=mock|live   (default: live)
+    AGENT_SOURCE=mock|live  (default: live, Rust on port 8002)
 """
 
 from __future__ import annotations
@@ -27,7 +27,9 @@ class GridClientAdapter:
     the sync mock engine to the same async interface the live client uses."""
 
     def __init__(self) -> None:
-        self.source = os.environ.get("GRID_SOURCE", "mock")
+        self.source = os.environ.get("GRID_SOURCE", "live")
+        if self.source not in ("mock", "live"):
+            raise ValueError("GRID_SOURCE must be live or mock")
         self._live = GridClient() if self.source == "live" else None
 
     async def get_state(self):
@@ -35,10 +37,22 @@ class GridClientAdapter:
             return await self._live.get_state()
         return _mock_grid.get_state()
 
+    async def replay(self, action=None):
+        if self._live:
+            return await self._live.replay(action)
+        if action is not None:
+            raise ValueError("Public replay requires GRID_SOURCE=live")
+        return {"mode": "mock", "playing": False}
+
     async def validate(self, actions):
         if self._live:
             return await self._live.validate(actions)
         return _mock_grid.validate(actions)
+
+    async def apply(self, actions):
+        if self._live:
+            return await self._live.apply(actions)
+        return _mock_grid.apply(actions)
 
     async def inject_fault(self, feeder_id: str, fault_type: str) -> None:
         if self._live:
@@ -55,7 +69,9 @@ class GridClientAdapter:
 
 class AgentClientAdapter:
     def __init__(self) -> None:
-        self.source = os.environ.get("AGENT_SOURCE", "mock")
+        self.source = os.environ.get("AGENT_SOURCE", "live")
+        if self.source not in ("mock", "live"):
+            raise ValueError("AGENT_SOURCE must be live or mock")
         self._live = AgentClient() if self.source == "live" else None
 
     async def get_offers(self, grid_state, requests):

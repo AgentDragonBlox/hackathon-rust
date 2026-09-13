@@ -9,6 +9,7 @@ Only the orchestrator loop (loop.py) writes to this. Everything else
 from __future__ import annotations
 
 import uuid
+import os
 from collections import deque
 from datetime import datetime
 
@@ -28,6 +29,7 @@ EVENT_LOG_MAXLEN = 500
 class SystemState:
     def __init__(self) -> None:
         self.tick_count: int = 0
+        self.data_source: dict | None = None
         self.latest_grid_state: GridState | None = None
         self.trades: list[Trade] = []
         self.reserve_contracts: list[ReserveContract] = []
@@ -79,6 +81,8 @@ class SystemState:
     def snapshot(self) -> dict:
         return {
             "tick_count": self.tick_count,
+            "agent_source": os.environ.get("AGENT_SOURCE", "live"),
+            "data_source": self.data_source,
             "grid_state": self.latest_grid_state.model_dump(mode="json") if self.latest_grid_state else None,
             "trades": [t.model_dump(mode="json") for t in self.trades[-20:]],
             "reserve_contracts": [c.model_dump(mode="json") for c in self.reserve_contracts],

@@ -1,0 +1,2969 @@
+{
+  "name": "OPSD CoSSMic campus replay",
+  "mode": "public_dataset_replay",
+  "source_url": "https://data.open-power-system-data.org/household_data/2020-04-15/",
+  "download_url": "https://data.open-power-system-data.org/household_data/2020-04-15/household_data_60min_singleindex.csv",
+  "source_sha256": "15956440b27465686eae2abf5895cbc3dab80f934a891bcb2f4f944428e97d60",
+  "license": "CC-BY-4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "attribution": "Open Power System Data. 2020. Data Package Household Data. Version 2020-04-15. Primary measurements: CoSSMic, Konstanz, Germany.",
+  "sample_minutes": 60,
+  "mapping": {
+    "academic_kw": {
+      "source_column": "DE_KN_public1_grid_import",
+      "source_peak_kw": 14.33800000000008,
+      "campus_peak_kw": 240.0
+    },
+    "ev_kw": {
+      "source_column": "DE_KN_industrial3_ev",
+      "source_peak_kw": 3.5860000000000127,
+      "campus_peak_kw": 70.0
+    },
+    "facility_kw": {
+      "source_column": "DE_KN_industrial3_area_offices",
+      "source_peak_kw": 3.480000000000473,
+      "campus_peak_kw": 150.0
+    },
+    "solar_kw": {
+      "source_column": "DE_KN_industrial3_pv_roof",
+      "source_peak_kw": 10.301000000000386,
+      "campus_peak_kw": 165.0
+    }
+  },
+  "transformation": "Consecutive cumulative kWh differences / 1 hour; each channel scaled to its stated campus peak over this week. No added noise or gap filling. OPSD interpolation flags retained.",
+  "assumptions": "Hospital demand fixed at 380 kW; battery state, network topology, market prices and injected faults are simulated. Office demand represents the facility/factory agent. These are historical German profiles, not campus measurements or live telemetry.",
+  "samples": [
+    {
+      "timestamp": "2016-06-06T06:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 9.725000000000023,
+        "ev_kw": 0.0,
+        "facility_kw": 1.3760000000002037,
+        "solar_kw": 1.5489999999999782
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 162.78421,
+        "ev_kw": 0.0,
+        "facility_kw": 59.310345,
+        "solar_kw": 24.811669,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-06T07:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 4.527999999999906,
+        "ev_kw": 0.0,
+        "facility_kw": 1.8649999999997817,
+        "solar_kw": 3.3059999999995853
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 75.792998,
+        "ev_kw": 0.0,
+        "facility_kw": 80.387931,
+        "solar_kw": 52.955053,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-06T08:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 2.59800000000007,
+        "ev_kw": 0.0,
+        "facility_kw": 2.344000000000051,
+        "solar_kw": 8.121000000000095
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 43.487237,
+        "ev_kw": 0.0,
+        "facility_kw": 101.034483,
+        "solar_kw": 130.08106,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-06T09:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 4.125999999999976,
+        "ev_kw": 0.0,
+        "facility_kw": 2.9549999999999272,
+        "solar_kw": 10.122000000000298
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 69.064026,
+        "ev_kw": 0.0,
+        "facility_kw": 127.37069,
+        "solar_kw": 162.132803,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-06T10:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 5.217999999999961,
+        "ev_kw": 0.0,
+        "facility_kw": 2.2159999999994398,
+        "solar_kw": 9.751999999999498
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 87.342726,
+        "ev_kw": 0.0,
+        "facility_kw": 95.517241,
+        "solar_kw": 156.206194,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-06T11:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 6.86200000000008,
+        "ev_kw": 0.0,
+        "facility_kw": 2.530000000000655,
+        "solar_kw": 9.900000000000546
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 114.861208,
+        "ev_kw": 0.0,
+        "facility_kw": 109.051724,
+        "solar_kw": 158.576837,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-06T12:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 4.142999999999915,
+        "ev_kw": 1.1570000000000107,
+        "facility_kw": 1.8400000000001455,
+        "solar_kw": 8.751999999999498
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 69.348584,
+        "ev_kw": 22.585053,
+        "facility_kw": 79.310345,
+        "solar_kw": 140.188331,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-06T13:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.69500000000005,
+        "ev_kw": 0.0,
+        "facility_kw": 2.209999999999127,
+        "solar_kw": 5.814000000000306
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 28.372158,
+        "ev_kw": 0.0,
+        "facility_kw": 95.258621,
+        "solar_kw": 93.127852,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-06T14:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.393000000000029,
+        "ev_kw": 0.0,
+        "facility_kw": 1.980000000000473,
+        "solar_kw": 3.2839999999996508
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 23.31706,
+        "ev_kw": 0.0,
+        "facility_kw": 85.344828,
+        "solar_kw": 52.60266,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-06T15:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1200000000000045,
+        "ev_kw": 0.0,
+        "facility_kw": 1.1549999999997453,
+        "solar_kw": 3.481999999999971
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 18.747385,
+        "ev_kw": 0.0,
+        "facility_kw": 49.784483,
+        "solar_kw": 55.774197,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-06T16:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.25,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8000000000001819,
+        "solar_kw": 1.3240000000005239
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 20.92342,
+        "ev_kw": 0.0,
+        "facility_kw": 34.482759,
+        "solar_kw": 21.20765,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-06T17:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.0799999999999272,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8100000000004002,
+        "solar_kw": 0.7010000000000218
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 18.077835,
+        "ev_kw": 0.0,
+        "facility_kw": 34.913793,
+        "solar_kw": 11.228522,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-06T18:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.08299999999997,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7599999999993088,
+        "solar_kw": 0.018000000000029104
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 18.128051,
+        "ev_kw": 0.0,
+        "facility_kw": 32.758621,
+        "solar_kw": 0.288322,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-06T19:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.2800000000000864,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7840000000005602,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 21.425582,
+        "ev_kw": 0.0,
+        "facility_kw": 33.793103,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-06T20:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.2199999999999136,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7910000000001673,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 20.421258,
+        "ev_kw": 0.0,
+        "facility_kw": 34.094828,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-06T21:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1110000000001037,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7549999999991996,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 18.596736,
+        "ev_kw": 0.0,
+        "facility_kw": 32.543103,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-06T22:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1049999999999045,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7310000000006767,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 18.496304,
+        "ev_kw": 0.0,
+        "facility_kw": 31.508621,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-06T23:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1650000000000773,
+        "ev_kw": 0.0,
+        "facility_kw": 0.738999999999578,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 19.500628,
+        "ev_kw": 0.0,
+        "facility_kw": 31.853448,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T00:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1200000000000045,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7550000000001091,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 18.747385,
+        "ev_kw": 0.0,
+        "facility_kw": 32.543103,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T01:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1479999999999109,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7449999999998909,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 19.216069,
+        "ev_kw": 0.0,
+        "facility_kw": 32.112069,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T02:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.580000000000041,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7449999999998909,
+        "solar_kw": 0.05900000000019645
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 26.447203,
+        "ev_kw": 0.0,
+        "facility_kw": 32.112069,
+        "solar_kw": 0.945054,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T03:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.0070000000000618,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8350000000000364,
+        "solar_kw": 0.8859999999995125
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 16.855907,
+        "ev_kw": 0.0,
+        "facility_kw": 35.991379,
+        "solar_kw": 14.191826,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T04:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 3.880999999999972,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8350000000000364,
+        "solar_kw": 2.71100000000024
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 64.963035,
+        "ev_kw": 0.0,
+        "facility_kw": 35.991379,
+        "solar_kw": 43.424425,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T05:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 7.616999999999962,
+        "ev_kw": 0.0,
+        "facility_kw": 1.6300000000001091,
+        "solar_kw": 4.251999999999498
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 127.498954,
+        "ev_kw": 0.0,
+        "facility_kw": 70.258621,
+        "solar_kw": 68.107951,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T06:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 10.116999999999962,
+        "ev_kw": 0.0,
+        "facility_kw": 2.3060000000004948,
+        "solar_kw": 5.234000000000378
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 169.345794,
+        "ev_kw": 0.0,
+        "facility_kw": 99.396552,
+        "solar_kw": 83.837492,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T07:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 4.855000000000018,
+        "ev_kw": 0.0,
+        "facility_kw": 2.358999999999469,
+        "solar_kw": 6.730999999999767
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 81.266564,
+        "ev_kw": 0.0,
+        "facility_kw": 101.681034,
+        "solar_kw": 107.816231,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T08:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 4.9500000000000455,
+        "ev_kw": 0.0,
+        "facility_kw": 2.069999999999709,
+        "solar_kw": 9.480000000000473
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 82.856744,
+        "ev_kw": 0.0,
+        "facility_kw": 89.224138,
+        "solar_kw": 151.849335,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T09:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 7.7690000000000055,
+        "ev_kw": 0.0,
+        "facility_kw": 3.480000000000473,
+        "solar_kw": 10.032000000000153
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 130.043242,
+        "ev_kw": 0.0,
+        "facility_kw": 150.0,
+        "solar_kw": 160.691195,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T10:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 6.5359999999999445,
+        "ev_kw": 0.0,
+        "facility_kw": 2.0599999999994907,
+        "solar_kw": 10.07799999999952
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 109.40438,
+        "ev_kw": 0.0,
+        "facility_kw": 88.793103,
+        "solar_kw": 161.428017,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T11:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 6.651000000000067,
+        "ev_kw": 0.0,
+        "facility_kw": 2.725000000000364,
+        "solar_kw": 9.777000000000044
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 111.329335,
+        "ev_kw": 0.0,
+        "facility_kw": 117.456897,
+        "solar_kw": 156.60664,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T12:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 5.168999999999983,
+        "ev_kw": 2.538000000000011,
+        "facility_kw": 2.0950000000002547,
+        "solar_kw": 6.421999999999571
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 86.522528,
+        "ev_kw": 49.542666,
+        "facility_kw": 90.301724,
+        "solar_kw": 102.866712,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T13:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 3.3439999999999372,
+        "ev_kw": 0.0,
+        "facility_kw": 1.7799999999997453,
+        "solar_kw": 2.793000000000575
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 55.974334,
+        "ev_kw": 0.0,
+        "facility_kw": 76.724138,
+        "solar_kw": 44.73789,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T14:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 2.30600000000004,
+        "ev_kw": 0.0,
+        "facility_kw": 2.0650000000005093,
+        "solar_kw": 1.7089999999998327
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 38.599526,
+        "ev_kw": 0.0,
+        "facility_kw": 89.008621,
+        "solar_kw": 27.374527,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T15:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 2.0919999999999845,
+        "ev_kw": 0.0,
+        "facility_kw": 1.8149999999995998,
+        "solar_kw": 0.8959999999997308
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 35.017436,
+        "ev_kw": 0.0,
+        "facility_kw": 78.232759,
+        "solar_kw": 14.352005,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T16:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.8759999999999764,
+        "ev_kw": 0.0,
+        "facility_kw": 1.2550000000001091,
+        "solar_kw": 0.5410000000001673
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 31.401869,
+        "ev_kw": 0.0,
+        "facility_kw": 54.094828,
+        "solar_kw": 8.665664,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T17:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.872000000000071,
+        "ev_kw": 0.0,
+        "facility_kw": 1.139999999999418,
+        "solar_kw": 0.2860000000000582
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 31.334914,
+        "ev_kw": 0.0,
+        "facility_kw": 49.137931,
+        "solar_kw": 4.581109,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T18:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.490000000000009,
+        "ev_kw": 0.0,
+        "facility_kw": 1.175000000000182,
+        "solar_kw": 0.0039999999999054126
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 24.940717,
+        "ev_kw": 0.0,
+        "facility_kw": 50.646552,
+        "solar_kw": 0.064071,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T19:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1789999999999736,
+        "ev_kw": 0.0,
+        "facility_kw": 1.5050000000001091,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 19.73497,
+        "ev_kw": 0.0,
+        "facility_kw": 64.87069,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T20:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1580000000000155,
+        "ev_kw": 0.0,
+        "facility_kw": 0.886000000000422,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 19.383457,
+        "ev_kw": 0.0,
+        "facility_kw": 38.189655,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T21:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.2139999999999418,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8400000000001455,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 20.320826,
+        "ev_kw": 0.0,
+        "facility_kw": 36.206897,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T22:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1890000000000782,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8439999999991414,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 19.902357,
+        "ev_kw": 0.0,
+        "facility_kw": 36.37931,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-07T23:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.17999999999995,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8450000000002547,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 19.751709,
+        "ev_kw": 0.0,
+        "facility_kw": 36.422414,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T00:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1480000000000246,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8299999999999272,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 19.216069,
+        "ev_kw": 0.0,
+        "facility_kw": 35.775862,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T01:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1319999999999482,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8249999999998181,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 18.948249,
+        "ev_kw": 0.0,
+        "facility_kw": 35.560345,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T02:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.7069999999999936,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8210000000008222,
+        "solar_kw": 0.02099999999973079
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 28.573023,
+        "ev_kw": 0.0,
+        "facility_kw": 35.387931,
+        "solar_kw": 0.336375,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T03:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9490000000000691,
+        "ev_kw": 0.0,
+        "facility_kw": 0.933999999999287,
+        "solar_kw": 0.5
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 15.885061,
+        "ev_kw": 0.0,
+        "facility_kw": 40.258621,
+        "solar_kw": 8.008931,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T04:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 4.033999999999992,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8850000000002183,
+        "solar_kw": 1.0960000000004584
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 67.524062,
+        "ev_kw": 0.0,
+        "facility_kw": 38.146552,
+        "solar_kw": 17.555577,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T05:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 11.569999999999936,
+        "ev_kw": 0.0,
+        "facility_kw": 1.6700000000000728,
+        "solar_kw": 2.9549999999999272
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 193.667178,
+        "ev_kw": 0.0,
+        "facility_kw": 71.982759,
+        "solar_kw": 47.332783,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T06:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 14.33800000000008,
+        "ev_kw": 0.0,
+        "facility_kw": 2.980000000000473,
+        "solar_kw": 0.5900000000001455
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 240.0,
+        "ev_kw": 0.0,
+        "facility_kw": 128.448276,
+        "solar_kw": 9.450539,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T07:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 6.763999999999896,
+        "ev_kw": 0.0,
+        "facility_kw": 3.1149999999997817,
+        "solar_kw": 0.9549999999999272
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 113.220812,
+        "ev_kw": 0.0,
+        "facility_kw": 134.267241,
+        "solar_kw": 15.297059,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T08:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 5.791000000000167,
+        "ev_kw": 0.0,
+        "facility_kw": 3.206000000000131,
+        "solar_kw": 0.975999999999658
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 96.934021,
+        "ev_kw": 0.0,
+        "facility_kw": 138.189655,
+        "solar_kw": 15.633434,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T09:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 10.211999999999989,
+        "ev_kw": 0.0,
+        "facility_kw": 3.28899999999976,
+        "solar_kw": 3.162000000000262
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 170.935974,
+        "ev_kw": 0.0,
+        "facility_kw": 141.767241,
+        "solar_kw": 50.648481,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T10:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 7.871999999999844,
+        "ev_kw": 0.4259999999999877,
+        "facility_kw": 2.9099999999998545,
+        "solar_kw": 3.8289999999997235
+      },
+      "source_interpolated_columns": [
+        "DE_KN_public1_grid_import"
+      ],
+      "campus_kw": {
+        "academic_kw": 131.767332,
+        "ev_kw": 8.315672,
+        "facility_kw": 125.431034,
+        "solar_kw": 61.332395,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T11:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 6.063000000000102,
+        "ev_kw": 0.10900000000000887,
+        "facility_kw": 3.1549999999997453,
+        "solar_kw": 3.1850000000004
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 101.486958,
+        "ev_kw": 2.127719,
+        "facility_kw": 135.991379,
+        "solar_kw": 51.016892,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T12:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 2.0750000000000455,
+        "ev_kw": 0.0,
+        "facility_kw": 3.305000000000291,
+        "solar_kw": 5.470999999999549
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 34.732878,
+        "ev_kw": 0.0,
+        "facility_kw": 142.456897,
+        "solar_kw": 87.633725,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T13:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1579999999999018,
+        "ev_kw": 0.0,
+        "facility_kw": 2.4399999999996,
+        "solar_kw": 4.7630000000008295
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 19.383457,
+        "ev_kw": 0.0,
+        "facility_kw": 105.172414,
+        "solar_kw": 76.293078,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T14:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1340000000000146,
+        "ev_kw": 0.0,
+        "facility_kw": 2.2950000000000728,
+        "solar_kw": 1.8539999999993597
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 18.981727,
+        "ev_kw": 0.0,
+        "facility_kw": 98.922414,
+        "solar_kw": 29.697117,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T15:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 2.7110000000000127,
+        "ev_kw": 0.0,
+        "facility_kw": 1.311000000000604,
+        "solar_kw": 1.905999999999949
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 45.378714,
+        "ev_kw": 0.0,
+        "facility_kw": 56.508621,
+        "solar_kw": 30.530046,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T16:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 2.518000000000029,
+        "ev_kw": 0.0,
+        "facility_kw": 0.9249999999992724,
+        "solar_kw": 0.5799999999999272
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 42.148138,
+        "ev_kw": 0.0,
+        "facility_kw": 39.87069,
+        "solar_kw": 9.29036,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T17:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 3.673999999999978,
+        "ev_kw": 0.0,
+        "facility_kw": 1.344000000000051,
+        "solar_kw": 0.22700000000077125
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 61.498117,
+        "ev_kw": 0.0,
+        "facility_kw": 57.931034,
+        "solar_kw": 3.636055,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T18:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 2.65300000000002,
+        "ev_kw": 0.0,
+        "facility_kw": 1.5150000000003274,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 44.407867,
+        "ev_kw": 0.0,
+        "facility_kw": 65.301724,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T19:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 3.269999999999982,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8249999999998181,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 54.735667,
+        "ev_kw": 0.0,
+        "facility_kw": 35.560345,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T20:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.3029999999998836,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8159999999998035,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 21.810573,
+        "ev_kw": 0.0,
+        "facility_kw": 35.172414,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T21:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.2960000000000491,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7640000000001237,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 21.693402,
+        "ev_kw": 0.0,
+        "facility_kw": 32.931034,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T22:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.2830000000001291,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7800000000006548,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 21.475799,
+        "ev_kw": 0.0,
+        "facility_kw": 33.62069,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-08T23:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.288000000000011,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7909999999992579,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 21.559492,
+        "ev_kw": 0.0,
+        "facility_kw": 34.094828,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T00:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.8699999999998909,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7690000000002328,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 31.301437,
+        "ev_kw": 0.0,
+        "facility_kw": 33.146552,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T01:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.2899999999999636,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7750000000005457,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 21.59297,
+        "ev_kw": 0.0,
+        "facility_kw": 33.405172,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T02:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.0480000000000018,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7699999999995271,
+        "solar_kw": 0.011999999999716238
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 17.542196,
+        "ev_kw": 0.0,
+        "facility_kw": 33.189655,
+        "solar_kw": 0.192214,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T03:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.0190000000000055,
+        "ev_kw": 0.0,
+        "facility_kw": 0.875,
+        "solar_kw": 0.12799999999970169
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 17.056772,
+        "ev_kw": 0.0,
+        "facility_kw": 37.715517,
+        "solar_kw": 2.050286,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T04:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 4.539999999999964,
+        "ev_kw": 0.0,
+        "facility_kw": 1.25,
+        "solar_kw": 0.2930000000005748
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 75.993862,
+        "ev_kw": 0.0,
+        "facility_kw": 53.87931,
+        "solar_kw": 4.693234,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T05:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 9.118000000000166,
+        "ev_kw": 0.0,
+        "facility_kw": 1.675000000000182,
+        "solar_kw": 1.8849999999993088
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 152.623797,
+        "ev_kw": 0.0,
+        "facility_kw": 72.198276,
+        "solar_kw": 30.193671,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T06:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 9.555999999999813,
+        "ev_kw": 0.0,
+        "facility_kw": 2.1049999999995634,
+        "solar_kw": 2.5839999999998327
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 159.955363,
+        "ev_kw": 0.0,
+        "facility_kw": 90.732759,
+        "solar_kw": 41.390156,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T07:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 6.686000000000149,
+        "ev_kw": 0.84699999999998,
+        "facility_kw": 2.4700000000002547,
+        "solar_kw": 2.548999999999978
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 111.91519,
+        "ev_kw": 16.533742,
+        "facility_kw": 106.465517,
+        "solar_kw": 40.829531,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T08:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 6.427999999999884,
+        "ev_kw": 3.5010000000000048,
+        "facility_kw": 2.5850000000000364,
+        "solar_kw": 3.248000000000502
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 107.596596,
+        "ev_kw": 68.34077,
+        "facility_kw": 111.422414,
+        "solar_kw": 52.026017,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T09:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 8.388000000000147,
+        "ev_kw": 3.2690000000000055,
+        "facility_kw": 3.230000000000473,
+        "solar_kw": 2.75
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 140.404519,
+        "ev_kw": 63.812047,
+        "facility_kw": 139.224138,
+        "solar_kw": 44.049121,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T10:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 8.446999999999889,
+        "ev_kw": 0.009000000000014552,
+        "facility_kw": 3.1049999999995634,
+        "solar_kw": 5.7830000000003565
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 141.392105,
+        "ev_kw": 0.175683,
+        "facility_kw": 133.836207,
+        "solar_kw": 92.631298,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T11:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 9.465000000000146,
+        "ev_kw": 0.0,
+        "facility_kw": 2.850000000000364,
+        "solar_kw": 7.894999999999527
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 158.432138,
+        "ev_kw": 0.0,
+        "facility_kw": 122.844828,
+        "solar_kw": 126.461023,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T12:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 4.673999999999978,
+        "ev_kw": 0.0,
+        "facility_kw": 2.1259999999992942,
+        "solar_kw": 8.846000000000458
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 78.236853,
+        "ev_kw": 0.0,
+        "facility_kw": 91.637931,
+        "solar_kw": 141.69401,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T13:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 3.5289999999999964,
+        "ev_kw": 0.0,
+        "facility_kw": 2.1890000000003056,
+        "solar_kw": 6.420999999999367
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 59.071,
+        "ev_kw": 0.0,
+        "facility_kw": 94.353448,
+        "solar_kw": 102.850694,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T14:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 2.5989999999999327,
+        "ev_kw": 0.0,
+        "facility_kw": 1.5399999999999636,
+        "solar_kw": 5.07300000000032
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 43.503975,
+        "ev_kw": 0.0,
+        "facility_kw": 66.37931,
+        "solar_kw": 81.258616,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T15:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.615000000000009,
+        "ev_kw": 0.0,
+        "facility_kw": 1.100999999999658,
+        "solar_kw": 3.1049999999995634
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 27.033059,
+        "ev_kw": 0.0,
+        "facility_kw": 47.456897,
+        "solar_kw": 49.735463,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T16:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1859999999999218,
+        "ev_kw": 0.0,
+        "facility_kw": 1.2590000000000146,
+        "solar_kw": 1.2770000000000437
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 19.852141,
+        "ev_kw": 0.0,
+        "facility_kw": 54.267241,
+        "solar_kw": 20.45481,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T17:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.0289999999999964,
+        "ev_kw": 0.0,
+        "facility_kw": 1.535000000000764,
+        "solar_kw": 0.2719999999999345
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 17.22416,
+        "ev_kw": 0.0,
+        "facility_kw": 66.163793,
+        "solar_kw": 4.356859,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T18:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.022000000000162,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8759999999992942,
+        "solar_kw": 0.012000000000625732
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 17.106988,
+        "ev_kw": 0.0,
+        "facility_kw": 37.758621,
+        "solar_kw": 0.192214,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T19:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.2110000000000127,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8740000000007058,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 20.27061,
+        "ev_kw": 0.0,
+        "facility_kw": 37.672414,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T20:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1989999999998417,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8899999999994179,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 20.069745,
+        "ev_kw": 0.0,
+        "facility_kw": 38.362069,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T21:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.2699999999999818,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8500000000003638,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 21.258195,
+        "ev_kw": 0.0,
+        "facility_kw": 36.637931,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T22:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.25,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8299999999999272,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 20.92342,
+        "ev_kw": 0.0,
+        "facility_kw": 35.775862,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-09T23:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.2609999999999673,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8400000000001455,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 21.107546,
+        "ev_kw": 0.0,
+        "facility_kw": 36.206897,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T00:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.219000000000051,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8400000000001455,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 20.404519,
+        "ev_kw": 0.0,
+        "facility_kw": 36.206897,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T01:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1870000000001255,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8299999999999272,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 19.86888,
+        "ev_kw": 0.0,
+        "facility_kw": 35.775862,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T02:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.0119999999999436,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8389999999999418,
+        "solar_kw": 0.0639999999993961
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 16.939601,
+        "ev_kw": 0.0,
+        "facility_kw": 36.163793,
+        "solar_kw": 1.025143,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T03:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.95699999999988,
+        "ev_kw": 0.0,
+        "facility_kw": 0.9359999999996944,
+        "solar_kw": 0.7150000000001455
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 16.018971,
+        "ev_kw": 0.0,
+        "facility_kw": 40.344828,
+        "solar_kw": 11.452772,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T04:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 4.295000000000073,
+        "ev_kw": 0.0,
+        "facility_kw": 1.3190000000004147,
+        "solar_kw": 2.5780000000004293
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 71.892872,
+        "ev_kw": 0.0,
+        "facility_kw": 56.853448,
+        "solar_kw": 41.294049,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T05:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 5.925999999999931,
+        "ev_kw": 0.0,
+        "facility_kw": 1.9409999999998035,
+        "solar_kw": 4.97899999999936
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 99.193751,
+        "ev_kw": 0.0,
+        "facility_kw": 83.663793,
+        "solar_kw": 79.752937,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T06:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 4.066000000000031,
+        "ev_kw": 0.0,
+        "facility_kw": 2.006000000000313,
+        "solar_kw": 7.119000000000597
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 68.059701,
+        "ev_kw": 0.0,
+        "facility_kw": 86.465517,
+        "solar_kw": 114.031162,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T07:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 2.8700000000001182,
+        "ev_kw": 0.0,
+        "facility_kw": 2.0739999999996144,
+        "solar_kw": 8.737999999999374
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 48.040173,
+        "ev_kw": 0.0,
+        "facility_kw": 89.396552,
+        "solar_kw": 139.964081,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T08:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 2.4549999999999272,
+        "ev_kw": 0.0,
+        "facility_kw": 2.2349999999996726,
+        "solar_kw": 9.74200000000019
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 41.093597,
+        "ev_kw": 0.0,
+        "facility_kw": 96.336207,
+        "solar_kw": 156.046015,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T09:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 2.9600000000000364,
+        "ev_kw": 2.9170000000000016,
+        "facility_kw": 2.0200000000004366,
+        "solar_kw": 10.222999999999956
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 49.546659,
+        "ev_kw": 56.940881,
+        "facility_kw": 87.068966,
+        "solar_kw": 163.750607,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T10:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 3.525000000000091,
+        "ev_kw": 1.8149999999999977,
+        "facility_kw": 3.1899999999996,
+        "solar_kw": 10.301000000000386
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 59.004045,
+        "ev_kw": 35.429448,
+        "facility_kw": 137.5,
+        "solar_kw": 165.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T11:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 4.324999999999818,
+        "ev_kw": 0.0,
+        "facility_kw": 2.369999999999891,
+        "solar_kw": 9.885999999999513
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 72.395034,
+        "ev_kw": 0.0,
+        "facility_kw": 102.155172,
+        "solar_kw": 158.352587,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T12:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.5170000000000528,
+        "ev_kw": 0.0,
+        "facility_kw": 2.3850000000002183,
+        "solar_kw": 9.018000000000029
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 25.392663,
+        "ev_kw": 0.0,
+        "facility_kw": 102.801724,
+        "solar_kw": 144.449083,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T13:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.3830000000000382,
+        "ev_kw": 0.0,
+        "facility_kw": 1.6549999999997453,
+        "solar_kw": 7.578000000000429
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 23.149672,
+        "ev_kw": 0.0,
+        "facility_kw": 71.336207,
+        "solar_kw": 121.383361,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T14:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.0609999999999218,
+        "ev_kw": 0.0,
+        "facility_kw": 1.5150000000003274,
+        "solar_kw": 5.572000000000116
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 17.759799,
+        "ev_kw": 0.0,
+        "facility_kw": 65.301724,
+        "solar_kw": 89.251529,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T15:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9270000000001346,
+        "ev_kw": 0.0,
+        "facility_kw": 0.9350000000004002,
+        "solar_kw": 3.2409999999999854
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.516808,
+        "ev_kw": 0.0,
+        "facility_kw": 40.301724,
+        "solar_kw": 51.913892,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T16:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9399999999998272,
+        "ev_kw": 0.0,
+        "facility_kw": 0.9600000000000364,
+        "solar_kw": 1.2770000000000437
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.734412,
+        "ev_kw": 0.0,
+        "facility_kw": 41.37931,
+        "solar_kw": 20.45481,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T17:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9820000000001983,
+        "ev_kw": 3.245999999999981,
+        "facility_kw": 0.9200000000000728,
+        "solar_kw": 0.37699999999949796
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 16.437439,
+        "ev_kw": 63.363079,
+        "facility_kw": 39.655172,
+        "solar_kw": 6.038734,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T18:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9429999999999836,
+        "ev_kw": 3.4869999999999948,
+        "facility_kw": 0.8209999999999127,
+        "solar_kw": 0.014000000000123691
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.784628,
+        "ev_kw": 68.067485,
+        "facility_kw": 35.387931,
+        "solar_kw": 0.22425,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T19:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.199999999999818,
+        "ev_kw": 3.5670000000000073,
+        "facility_kw": 0.7889999999997599,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 20.086483,
+        "ev_kw": 69.629113,
+        "facility_kw": 34.008621,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T20:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.2670000000000528,
+        "ev_kw": 3.546999999999997,
+        "facility_kw": 0.7799999999997453,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 21.207979,
+        "ev_kw": 69.238706,
+        "facility_kw": 33.62069,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T21:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1829999999999927,
+        "ev_kw": 3.5860000000000127,
+        "facility_kw": 0.7449999999998909,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 19.801925,
+        "ev_kw": 70.0,
+        "facility_kw": 32.112069,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T22:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1990000000000691,
+        "ev_kw": 3.484000000000009,
+        "facility_kw": 0.7250000000003638,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 20.069745,
+        "ev_kw": 68.008924,
+        "facility_kw": 31.25,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-10T23:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.191000000000031,
+        "ev_kw": 0.04999999999998295,
+        "facility_kw": 0.7600000000002183,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 19.935835,
+        "ev_kw": 0.976018,
+        "facility_kw": 32.758621,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T00:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1289999999999054,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7199999999993452,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 18.898033,
+        "ev_kw": 0.0,
+        "facility_kw": 31.034483,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T01:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.2309999999999945,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7310000000006767,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 20.605384,
+        "ev_kw": 0.0,
+        "facility_kw": 31.508621,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T02:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9650000000001455,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7590000000000146,
+        "solar_kw": 0.012999999999919964
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 16.15288,
+        "ev_kw": 0.0,
+        "facility_kw": 32.715517,
+        "solar_kw": 0.208232,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T03:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9789999999998145,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8309999999992215,
+        "solar_kw": 0.09600000000045839
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 16.387223,
+        "ev_kw": 0.0,
+        "facility_kw": 35.818966,
+        "solar_kw": 1.537715,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T04:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.0730000000000928,
+        "ev_kw": 0.0,
+        "facility_kw": 0.75,
+        "solar_kw": 0.19099999999980355
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 17.960664,
+        "ev_kw": 0.0,
+        "facility_kw": 32.327586,
+        "solar_kw": 3.059412,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T05:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.900000000000091,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7400000000006912,
+        "solar_kw": 0.8789999999999054
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.064863,
+        "ev_kw": 0.0,
+        "facility_kw": 31.896552,
+        "solar_kw": 14.079701,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T06:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9589999999998327,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7190000000000509,
+        "solar_kw": 2.0020000000004075
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 16.052448,
+        "ev_kw": 0.0,
+        "facility_kw": 30.991379,
+        "solar_kw": 32.06776,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T07:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9780000000000655,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7399999999997817,
+        "solar_kw": 2.480999999999767
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 16.370484,
+        "ev_kw": 0.0,
+        "facility_kw": 31.896552,
+        "solar_kw": 39.740316,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T08:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9010000000000673,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7200000000002547,
+        "solar_kw": 4.398000000000138
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.081601,
+        "ev_kw": 0.0,
+        "facility_kw": 31.034483,
+        "solar_kw": 70.446559,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T09:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.071999999999889,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7409999999999854,
+        "solar_kw": 1.4920000000001892
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 17.943925,
+        "ev_kw": 0.0,
+        "facility_kw": 31.939655,
+        "solar_kw": 23.898651,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T10:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.7899999999999636,
+        "ev_kw": 0.0,
+        "facility_kw": 0.839999999999236,
+        "solar_kw": 4.558999999999287
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 29.962338,
+        "ev_kw": 0.0,
+        "facility_kw": 36.206897,
+        "solar_kw": 73.025434,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T11:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.2590000000000146,
+        "ev_kw": 0.0,
+        "facility_kw": 0.774000000000342,
+        "solar_kw": 7.551000000000386
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 21.074069,
+        "ev_kw": 0.0,
+        "facility_kw": 33.362069,
+        "solar_kw": 120.950879,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T12:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9610000000000127,
+        "ev_kw": 0.0,
+        "facility_kw": 0.774000000000342,
+        "solar_kw": 7.104999999999563
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 16.085926,
+        "ev_kw": 0.0,
+        "facility_kw": 33.362069,
+        "solar_kw": 113.806912,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T13:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9400000000000546,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7719999999999345,
+        "solar_kw": 3.649000000000342
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.734412,
+        "ev_kw": 0.0,
+        "facility_kw": 33.275862,
+        "solar_kw": 58.44918,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T14:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9600000000000364,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7889999999997599,
+        "solar_kw": 3.2590000000000146
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 16.069187,
+        "ev_kw": 0.0,
+        "facility_kw": 34.008621,
+        "solar_kw": 52.202213,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T15:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9300000000000637,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7600000000002183,
+        "solar_kw": 2.7330000000001746
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.567025,
+        "ev_kw": 0.0,
+        "facility_kw": 32.758621,
+        "solar_kw": 43.776818,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T16:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.0599999999999454,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7449999999998909,
+        "solar_kw": 1.0760000000000218
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 17.74306,
+        "ev_kw": 0.0,
+        "facility_kw": 32.112069,
+        "solar_kw": 17.23522,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T17:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.8989999999998872,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7160000000003492,
+        "solar_kw": 0.3319999999994252
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.048124,
+        "ev_kw": 0.0,
+        "facility_kw": 30.862069,
+        "solar_kw": 5.31793,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T18:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9909999999999854,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7549999999991996,
+        "solar_kw": 0.004000000000814907
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 16.588088,
+        "ev_kw": 0.0,
+        "facility_kw": 32.543103,
+        "solar_kw": 0.064071,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T19:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.900000000000091,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7540000000008149,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.064863,
+        "ev_kw": 0.0,
+        "facility_kw": 32.5,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T20:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.009999999999991,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7889999999997599,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 16.906124,
+        "ev_kw": 0.0,
+        "facility_kw": 34.008621,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T21:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9169999999999163,
+        "ev_kw": 0.0,
+        "facility_kw": 0.75,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.349421,
+        "ev_kw": 0.0,
+        "facility_kw": 32.327586,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T22:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9830000000001746,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7409999999999854,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 16.454178,
+        "ev_kw": 0.0,
+        "facility_kw": 31.939655,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-11T23:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9099999999998545,
+        "ev_kw": 0.0,
+        "facility_kw": 0.75,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.23225,
+        "ev_kw": 0.0,
+        "facility_kw": 32.327586,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T00:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.0800000000001546,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7299999999995634,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 18.077835,
+        "ev_kw": 0.0,
+        "facility_kw": 31.465517,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T01:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9099999999998545,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7550000000001091,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.23225,
+        "ev_kw": 0.0,
+        "facility_kw": 32.543103,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T02:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.0,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7350000000005821,
+        "solar_kw": 0.0039999999999054126
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 16.738736,
+        "ev_kw": 0.0,
+        "facility_kw": 31.681034,
+        "solar_kw": 0.064071,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T03:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9100000000000819,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8299999999999272,
+        "solar_kw": 0.2109999999993306
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.23225,
+        "ev_kw": 0.0,
+        "facility_kw": 35.775862,
+        "solar_kw": 3.379769,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T04:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9780000000000655,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7190000000000509,
+        "solar_kw": 0.8140000000003056
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 16.370484,
+        "ev_kw": 0.0,
+        "facility_kw": 30.991379,
+        "solar_kw": 13.03854,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T05:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9230000000000018,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7399999999997817,
+        "solar_kw": 3.3909999999996217
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.449854,
+        "ev_kw": 0.0,
+        "facility_kw": 31.896552,
+        "solar_kw": 54.316571,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T06:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.0489999999999782,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7409999999999854,
+        "solar_kw": 6.814000000000306
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 17.558934,
+        "ev_kw": 0.0,
+        "facility_kw": 31.939655,
+        "solar_kw": 109.145714,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T07:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9099999999998545,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7299999999995634,
+        "solar_kw": 4.003999999999905
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.23225,
+        "ev_kw": 0.0,
+        "facility_kw": 31.465517,
+        "solar_kw": 64.135521,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T08:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9700000000000273,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7359999999998763,
+        "solar_kw": 3.436000000000604
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 16.236574,
+        "ev_kw": 0.0,
+        "facility_kw": 31.724138,
+        "solar_kw": 55.037375,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T09:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9230000000000018,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7450000000008004,
+        "solar_kw": 3.569999999999709
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.449854,
+        "ev_kw": 0.0,
+        "facility_kw": 32.112069,
+        "solar_kw": 57.183769,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T10:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.5850000000000364,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8079999999999927,
+        "solar_kw": 3.21100000000024
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 26.530897,
+        "ev_kw": 0.0,
+        "facility_kw": 34.827586,
+        "solar_kw": 51.433356,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T11:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9120000000000346,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7109999999993306,
+        "solar_kw": 3.4429999999993015
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.265727,
+        "ev_kw": 0.0,
+        "facility_kw": 30.646552,
+        "solar_kw": 55.1495,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T12:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9669999999998709,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7400000000006912,
+        "solar_kw": 7.079999999999927
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 16.186358,
+        "ev_kw": 0.0,
+        "facility_kw": 31.896552,
+        "solar_kw": 113.406465,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T13:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.93100000000004,
+        "ev_kw": 0.0,
+        "facility_kw": 0.714999999999236,
+        "solar_kw": 6.856000000000677
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.583763,
+        "ev_kw": 0.0,
+        "facility_kw": 30.818966,
+        "solar_kw": 109.818464,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T14:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9519999999999982,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7400000000006912,
+        "solar_kw": 4.823999999999614
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.935277,
+        "ev_kw": 0.0,
+        "facility_kw": 31.896552,
+        "solar_kw": 77.270168,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T15:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9200000000000728,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7199999999993452,
+        "solar_kw": 3.5979999999999563
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.399637,
+        "ev_kw": 0.0,
+        "facility_kw": 31.034483,
+        "solar_kw": 57.632269,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T16:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.0199999999999818,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7359999999998763,
+        "solar_kw": 1.481999999999971
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 17.073511,
+        "ev_kw": 0.0,
+        "facility_kw": 31.724138,
+        "solar_kw": 23.738472,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T17:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9410000000000309,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7290000000002692,
+        "solar_kw": 0.28700000000026193
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.751151,
+        "ev_kw": 0.0,
+        "facility_kw": 31.422414,
+        "solar_kw": 4.597126,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T18:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.0,
+        "ev_kw": 0.0,
+        "facility_kw": 0.761000000000422,
+        "solar_kw": 0.010000000000218279
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 16.738736,
+        "ev_kw": 0.0,
+        "facility_kw": 32.801724,
+        "solar_kw": 0.160179,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T19:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1410000000000764,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7889999999997599,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 19.098898,
+        "ev_kw": 0.0,
+        "facility_kw": 34.008621,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T20:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.2009999999997945,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7690000000002328,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 20.103222,
+        "ev_kw": 0.0,
+        "facility_kw": 33.146552,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T21:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1700000000000728,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7559999999994034,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 19.584321,
+        "ev_kw": 0.0,
+        "facility_kw": 32.586207,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T22:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.25,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7300000000004729,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 20.92342,
+        "ev_kw": 0.0,
+        "facility_kw": 31.465517,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-12T23:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1900000000000546,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7640000000001237,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 19.919096,
+        "ev_kw": 0.0,
+        "facility_kw": 32.931034,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-13T00:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.1869999999998981,
+        "ev_kw": 0.0,
+        "facility_kw": 0.725999999999658,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 19.86888,
+        "ev_kw": 0.0,
+        "facility_kw": 31.293103,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-13T01:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 1.2010000000000218,
+        "ev_kw": 0.0,
+        "facility_kw": 0.7650000000003274,
+        "solar_kw": 0.0
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 20.103222,
+        "ev_kw": 0.0,
+        "facility_kw": 32.974138,
+        "solar_kw": 0.0,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-13T02:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9370000000001255,
+        "ev_kw": 0.0,
+        "facility_kw": 0.75,
+        "solar_kw": 0.03099999999994907
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.684196,
+        "ev_kw": 0.0,
+        "facility_kw": 32.327586,
+        "solar_kw": 0.496554,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-13T03:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 0.9420000000000073,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8440000000000509,
+        "solar_kw": 0.09400000000005093
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 15.76789,
+        "ev_kw": 0.0,
+        "facility_kw": 36.37931,
+        "solar_kw": 1.505679,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-13T04:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 4.781999999999925,
+        "ev_kw": 0.0,
+        "facility_kw": 0.8759999999992942,
+        "solar_kw": 0.6859999999996944
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 80.044637,
+        "ev_kw": 0.0,
+        "facility_kw": 37.758621,
+        "solar_kw": 10.988254,
+        "hospital_kw": 380.0
+      }
+    },
+    {
+      "timestamp": "2016-06-13T05:00:00Z",
+      "source_average_kw": {
+        "academic_kw": 10.954999999999927,
+        "ev_kw": 0.0,
+        "facility_kw": 1.8800000000001091,
+        "solar_kw": 1.155999999999949
+      },
+      "source_interpolated_columns": [],
+      "campus_kw": {
+        "academic_kw": 183.372855,
+        "ev_kw": 0.0,
+        "facility_kw": 81.034483,
+        "solar_kw": 18.516649,
+        "hospital_kw": 380.0
+      }
+    }
+  ]
+}

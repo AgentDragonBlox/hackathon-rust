@@ -1,41 +1,41 @@
-name: agent_engines tests
-
-# Runs on every push/PR that touches agent_engines or the shared contract.
-# This exists specifically because of a real incident: settle/reserve
-# endpoints were tested locally and verified working, but never actually
-# landed in a push — nobody found out until Person 1 manually merged
-# branches and tested by hand. CI running on exactly what's in the branch
-# (not what's on someone's laptop) catches that automatically, the moment
-# it happens, without needing another teammate to notice.
-
-"on":
-  push:
-    paths:
-      - "agent_engines/**"
-      - "shared/**"
-  pull_request:
-    paths:
-      - "agent_engines/**"
-      - "shared/**"
-
+name: Rust primary demo
+on: [push, pull_request]
 jobs:
-  test:
+  backend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-
-      - name: Install dependencies
-        run: pip install -r agent_engines/requirements.txt
-
-      - name: Run test suite
-        run: python -m pytest agent_engines/tests/ -v
-
-      - name: Confirm the standalone smoke-test harness also runs
+          python-version: '3.12'
+      - run: rustup toolchain install stable --profile minimal
+      - run: cargo test --locked
+      - run: pip install -r requirements.txt
+      - run: python -m pytest grid_engine/tests tests -q
+      - name: Verify real Rust and Python services
+        shell: bash
         run: |
-          python -m uvicorn agent_engines.main:app --port 8002 &
-          sleep 2
-          python -m agent_engines.run_market
+          cargo build --locked
+          target/debug/agent_engines > /tmp/agents.log 2>&1 &
+          AGENTS_PID=$!
+          python -m uvicorn grid_engine.api:app --port 8001 > /tmp/grid.log 2>&1 &
+          GRID_PID=$!
+          python -m uvicorn orchestrator.main:app --port 8000 > /tmp/orchestrator.log 2>&1 &
+          ORCHESTRATOR_PID=$!
+          trap 'kill "$AGENTS_PID" "$GRID_PID" "$ORCHESTRATOR_PID"' EXIT
+          python scripts/smoke_demo.py
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dashboard
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: dashboard/package-lock.json
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build

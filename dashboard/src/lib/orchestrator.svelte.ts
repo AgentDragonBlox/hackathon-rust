@@ -3,11 +3,29 @@
 // this is the Svelte 5 rune equivalent of a store, without the extra
 // writable()/subscribe() ceremony.
 
-const ORCHESTRATOR_HTTP = import.meta.env.PUBLIC_ORCHESTRATOR_URL ?? 'http://localhost:8000';
+import { env } from '$env/dynamic/public';
+
+const ORCHESTRATOR_HTTP = (env.PUBLIC_ORCHESTRATOR_URL || 'http://localhost:8000').replace(/\/$/, '');
 const ORCHESTRATOR_WS = ORCHESTRATOR_HTTP.replace(/^http/, 'ws') + '/ws/dashboard';
 
 export interface OrchestratorSnapshot {
 	tick_count: number;
+	agent_source: string;
+	data_source: {
+		mode: string;
+		playing: boolean;
+		index?: number;
+		sample_count?: number;
+		sample_minutes?: number;
+		source_url?: string;
+		license?: string;
+		assumptions?: string;
+		sample?: {
+			timestamp: string;
+			campus_kw: Record<string, number>;
+			source_interpolated_columns: string[];
+		};
+	} | null;
 	grid_state: {
 		timestamp: string;
 		assets: Array<{
@@ -53,8 +71,10 @@ class OrchestratorClient {
 	data = $state<OrchestratorSnapshot | null>(null);
 	private ws: WebSocket | null = null;
 	private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+	private stopped = true;
 
 	connect() {
+		this.stopped = false;
 		if (this.ws) return;
 		this.ws = new WebSocket(ORCHESTRATOR_WS);
 
@@ -63,17 +83,17 @@ class OrchestratorClient {
 		};
 
 		this.ws.onmessage = (event) => {
-			const msg = JSON.parse(event.data);
-			if (msg.type === 'state_update') {
-				this.data = msg.data;
-			}
+			try {
+				const msg = JSON.parse(event.data);
+				if (msg.type === 'state_update') this.data = msg.data;
+			} catch { this.ws?.close(); }
 		};
 
 		this.ws.onclose = () => {
 			this.connected = false;
 			this.ws = null;
 			// Reconnect after 2s, same interval the original static dashboard used.
-			this.reconnectTimer = setTimeout(() => this.connect(), 2000);
+			if (!this.stopped) this.reconnectTimer = setTimeout(() => this.connect(), 2000);
 		};
 
 		this.ws.onerror = () => {
@@ -82,6 +102,8 @@ class OrchestratorClient {
 	}
 
 	disconnect() {
+		this.stopped = true;
+		this.connected = false;
 		if (this.reconnectTimer) clearTimeout(this.reconnectTimer);
 		this.ws?.close();
 		this.ws = null;
@@ -91,9 +113,22 @@ class OrchestratorClient {
 export const orchestrator = new OrchestratorClient();
 
 export async function triggerScenario(name: string): Promise<void> {
-	await fetch(`${ORCHESTRATOR_HTTP}/scenario/${name}`, { method: 'POST' });
+	await post(`/scenario/${name}`);
 }
 
 export async function resetScenario(): Promise<void> {
-	await fetch(`${ORCHESTRATOR_HTTP}/scenario/reset`, { method: 'POST' });
+	await post('/scenario/reset');
+}
+
+async function post(path: string, body?: unknown): Promise<void> {
+	const response = await fetch(`${ORCHESTRATOR_HTTP}${path}`, {
+		method: 'POST',
+		headers: body ? { 'Content-Type': 'application/json' } : undefined,
+		body: body ? JSON.stringify(body) : undefined
+	});
+	if (!response.ok) throw new Error(`Control failed (${response.status}): ${await response.text()}`);
+}
+
+export async function controlReplay(action: 'play' | 'pause' | 'step' | 'restart'): Promise<void> {
+	await post('/replay/control', { action });
 }

@@ -21,6 +21,3 @@ chrono = { version = "0.4", features = ["serde"] }
 # how the Python version's test_api.py uses FastAPI's TestClient
 tower = { version = "0.4", features = ["util"] }
 http-body-util = "0.1"
-
-[profile.release]
-opt-level = 3

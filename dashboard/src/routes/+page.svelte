@@ -5,6 +5,8 @@
 	import SystemStatus from '$lib/SystemStatus.svelte';
 	import BlockchainLedger from '$lib/BlockchainLedger.svelte';
 	import AgentActivity from '$lib/AgentActivity.svelte';
+	import DataReplay from '$lib/DataReplay.svelte';
+	import ScenarioComparison from '$lib/ScenarioComparison.svelte';
 
 	const SCENARIOS = [
 		{ name: 'solar_drop', label: 'Solar Drop' },
@@ -16,11 +18,15 @@
 	];
 
 	let triggering = $state<string | null>(null);
+	let controlError = $state('');
 
 	async function handleTrigger(name: string) {
 		triggering = name;
+		controlError = '';
 		try {
 			await triggerScenario(name);
+		} catch (cause) {
+			controlError = cause instanceof Error ? cause.message : 'Scenario failed';
 		} finally {
 			triggering = null;
 		}
@@ -28,8 +34,11 @@
 
 	async function handleReset() {
 		triggering = 'reset';
+		controlError = '';
 		try {
 			await resetScenario();
+		} catch (cause) {
+			controlError = cause instanceof Error ? cause.message : 'Reset failed';
 		} finally {
 			triggering = null;
 		}
@@ -44,7 +53,7 @@
 		<div>
 			<h1 style="font-size: 20px; margin: 0;">Microgrid Resilience Exchange</h1>
 			<p style="color: var(--text-dim); font-size: 12px; margin: 2px 0 0;">
-				predictive multi-agent flexibility market · real AC power-flow validation
+					Rust-powered flexibility market · public energy profiles · AC power-flow validation
 			</p>
 		</div>
 		<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
@@ -73,6 +82,11 @@
 			</span>
 		</div>
 	</header>
+	{#if controlError}<p role="alert" style="color: var(--red)">{controlError}</p>{/if}
+
+	<ScenarioComparison />
+
+	<DataReplay />
 
 	<div style="display: grid; grid-template-columns: 1fr 320px; gap: 16px;">
 		<div style="background: var(--panel); border: 1px solid var(--panel-border); border-radius: 6px; padding: 16px;">

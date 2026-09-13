@@ -20,3 +20,5 @@ pytest==9.1.1
 # here from one dev's environment.
 fastapi
 uvicorn
+httpx
+websockets

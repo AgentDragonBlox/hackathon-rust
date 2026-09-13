@@ -7,10 +7,15 @@ Each tick:
      active market open, build a FlexibilityRequest for it
   3. Ask Person 2 (or mock) for offers, then to clear the market
   4. Send the resulting ProposedActions back to Person 1 for validation
-  5. Apply only the feasible ones, record Trades + blockchain entries
-  6. Log a SystemEvent for every meaningful step (this IS the agent
+  5. Settle only the feasible ones (Rust), record Trades + blockchain entries
+  6. Commit the settled actions into Person 1's LIVE grid state
+     (grid_client.apply) -- this is what makes an accepted trade actually
+     change the network the NEXT tick observes, closing the loop from
+     OBSERVE -> ... -> SETTLE back to OBSERVE. A settlement that can't be
+     applied is logged as an explicit error, never silently ignored.
+  7. Log a SystemEvent for every meaningful step (this IS the agent
      activity feed the dashboard renders)
-  7. Broadcast the new state to any connected dashboards
+  8. Broadcast the new state to any connected dashboards
 
 Every external call (to Person 1 or Person 2) is wrapped so a timeout
 or exception degrades gracefully instead of killing the loop.
@@ -28,7 +33,7 @@ from orchestrator.state import state
 from shared.contracts import FlexibilityRequest, GridState, Prediction, Trade
 
 TICK_INTERVAL_SECONDS = 2.0
-CALL_TIMEOUT_SECONDS = 3.0
+CALL_TIMEOUT_SECONDS = 35.0
 OVERLOAD_THRESHOLD = 80.0
 MARKET_COOLDOWN_TICKS = 10  # don't re-open a market for the same feeder for this many ticks
 
@@ -46,6 +51,7 @@ class OrchestrationLoop:
         self.agent_client = agent_client
         self._task: asyncio.Task | None = None
         self._running = False
+        self.control_lock = asyncio.Lock()
 
     def start(self) -> None:
         if self._task is None:
@@ -77,7 +83,36 @@ class OrchestrationLoop:
             return None
 
     async def _tick(self) -> None:
+        async with self.control_lock:
+            await self._tick_locked()
+
+    async def _tick_locked(self) -> None:
         state.tick_count += 1
+
+        replay = await self._safe_call(
+            self.grid_client.replay(), on_fail_source="Grid Engine",
+            on_fail_message="Failed to read data provenance",
+        )
+        state.data_source = replay
+        if replay is None:
+            await self._broadcast_snapshot()
+            return
+        if replay.get("mode") == "public_dataset_replay":
+            # Pausing also pauses market processing; one manual step is processed once.
+            previous_index = getattr(self, "_last_replay_index", None)
+            if replay["playing"] and previous_index is not None:
+                replay = await self._safe_call(
+                    self.grid_client.replay("tick"), on_fail_source="Grid Engine",
+                    on_fail_message="Failed to advance public replay",
+                )
+                if replay is None:
+                    await self._broadcast_snapshot()
+                    return
+                state.data_source = replay
+            elif not replay["playing"] and previous_index == replay["index"]:
+                await self._broadcast_snapshot()
+                return
+            self._last_replay_index = replay["index"]
 
         grid_state: GridState | None = await self._safe_call(
             self.grid_client.get_state(),
@@ -106,6 +141,10 @@ class OrchestrationLoop:
         for feeder_id in recovered:
             del state.active_markets[feeder_id]
             state.log_event("System", f"Feeder {feeder_id}: back to normal", "info")
+
+        for feeder_id, opened_at in list(state.active_markets.items()):
+            if state.tick_count - opened_at >= MARKET_COOLDOWN_TICKS:
+                del state.active_markets[feeder_id]
 
         overloaded_predictions = [
             p for p in grid_state.predictions
@@ -144,7 +183,8 @@ class OrchestrationLoop:
                     rate_per_tick = feeder.loading_percent - prev_feeder.loading_percent
                     if rate_per_tick > 0:
                         remaining = max(100.0 - feeder.loading_percent, 0.0)
-                        eta = (remaining / rate_per_tick) * TICK_INTERVAL_SECONDS
+                        sample_seconds = (state.data_source or {}).get("sample_minutes", 0) * 60 or TICK_INTERVAL_SECONDS
+                        eta = (remaining / rate_per_tick) * sample_seconds
 
             predictions.append(
                 Prediction(feeder_id=feeder.feeder_id, predicted_overload=True, eta_seconds=eta, confidence=0.7)
@@ -237,30 +277,8 @@ class OrchestrationLoop:
             on_fail_message="Failed to settle trades",
         )
         if not trades:
-            # Fallback: /agents/settle may not be live yet (confirmed 404 as
-            # of the last cross-team sync — see INTEGRATION_GUIDELINES_2.md).
-            # Rather than silently dropping trades/blockchain entries for the
-            # whole demo whenever Person 2's settle endpoint isn't reachable,
-            # the orchestrator builds them itself at a flat demo rate. This
-            # is clearly logged as a fallback, not passed off as real settle
-            # data, so it's visible during debugging/judging if asked.
-            state.log_event(
-                "Clearing Agent",
-                "Agent settle() unavailable \u2014 using orchestrator fallback pricing",
-                "warning",
-            )
-            trades = [
-                Trade(
-                    trade_id=str(uuid.uuid4()),
-                    request_id=action.request_id,
-                    buyer_id="grid",
-                    seller_id=action.asset_id,
-                    kw_amount=action.kw_amount,
-                    price=action.kw_amount * 0.1,
-                    action_id=action.action_id,
-                )
-                for action in feasible_actions
-            ]
+            state.log_event("Clearing Agent", "Settlement unavailable; no trades recorded", "error")
+            return
 
         for trade in trades:
             state.trades.append(trade)
@@ -271,6 +289,34 @@ class OrchestrationLoop:
             )
 
         state.log_event("Grid Engine", "Power-flow validation PASSED")
+
+        # Physical feedback loop: only trades that were actually settled get
+        # committed into the live grid network. feasible_actions and trades
+        # correspond 1:1 (agent_client.settle either returns one Trade per
+        # action or nothing at all -- see agent_engines_rs/src/main.rs's
+        # settle handler), so applying feasible_actions here applies exactly
+        # what was just settled, nothing more. A settled-but-unapplied
+        # action is reported honestly rather than silently treated as if it
+        # took effect -- see the warning branch below.
+        apply_results = await self._safe_call(
+            self.grid_client.apply(feasible_actions),
+            on_fail_source="Grid Engine",
+            on_fail_message="Settled trades could not be applied to grid state",
+        )
+        if apply_results is None:
+            state.log_event(
+                "Grid Engine",
+                "Trades settled but NOT applied to physical grid state (apply call failed); "
+                "next grid state will NOT reflect this settlement",
+                "error",
+            )
+        else:
+            for result in apply_results:
+                if not result.applied:
+                    state.log_event(
+                        "Grid Engine", f"Action {result.action_id} not applied to grid: {result.reason}", "warning",
+                    )
+
         new_state = await self._safe_call(
             self.grid_client.get_state(),
             on_fail_source="Grid Engine",

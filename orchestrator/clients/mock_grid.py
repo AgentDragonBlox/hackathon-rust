@@ -16,6 +16,7 @@ from __future__ import annotations
 from datetime import datetime
 
 from shared.contracts import (
+    ApplyResult,
     AssetState,
     GridState,
     NetworkState,
@@ -58,6 +59,7 @@ class MockGridEngine:
         self.scenario_tick_start: int | None = None
         self.active_faults: list[str] = []
         self.islands: list[list[str]] = []
+        self._applied_action_ids: set[str] = set()
 
     # ---- scenario injection -------------------------------------------------
 
@@ -173,10 +175,33 @@ class MockGridEngine:
 
             results.append(ValidationResult(action_id=action.action_id, feasible=True))
 
-            # Apply the action's effect to mock state so subsequent ticks reflect it.
+        return results
+
+    # ---- physical feedback loop --------------------------------------------
+
+    def apply(self, actions: list[ProposedAction]) -> list[ApplyResult]:
+        """Mock equivalent of the live grid's POST /grid/apply: commits
+        already-validated actions into mock state so the NEXT get_state()
+        reflects them. Unlike the earlier version of this mock, effects are
+        applied HERE (after settlement), not inside validate() -- validate()
+        must stay non-mutating so a rejected/never-settled action can never
+        change state, matching the live grid engine's contract."""
+        results: list[ApplyResult] = []
+        for action in actions:
+            if action.action_id in self._applied_action_ids:
+                results.append(ApplyResult(
+                    action_id=action.action_id, applied=False,
+                    reason="action_id already applied -- settlement idempotency guard",
+                ))
+                continue
+            asset = self.assets.get(action.asset_id)
+            if asset is None:
+                results.append(ApplyResult(action_id=action.action_id, applied=False, reason="unknown asset"))
+                continue
             if action.action_type == "battery_discharge" and asset.soc_percent is not None:
                 asset.soc_percent = max(asset.soc_percent - action.kw_amount / 10, 0)
             else:
                 asset.current_load_kw = max(asset.current_load_kw - action.kw_amount, 0)
-
+            self._applied_action_ids.add(action.action_id)
+            results.append(ApplyResult(action_id=action.action_id, applied=True))
         return results

@@ -26,6 +26,10 @@ class AgentClient:
         self, grid_state: GridState, requests: list[FlexibilityRequest]
     ) -> list[AgentOffer]:
         async with httpx.AsyncClient(timeout=TIMEOUT_SECONDS) as client:
+            health = await client.get(f"{self.base_url}/health")
+            health.raise_for_status()
+            if health.json().get("engine") != "rust":
+                raise RuntimeError("The primary demo requires the Rust agent engine on AGENT_ENGINE_URL")
             resp = await client.post(
                 f"{self.base_url}/agents/offers",
                 json={

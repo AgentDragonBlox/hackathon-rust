@@ -8,7 +8,7 @@ const config = {
 		// adapter-vercel is what actually makes `vercel deploy` work correctly
 		// for a SvelteKit app -- it builds serverless/edge functions for any
 		// server-side routes and static assets for everything else.
-		adapter: adapter()
+		adapter: adapter({ runtime: 'nodejs22.x' })
 	}
 };
 

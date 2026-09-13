@@ -98,9 +98,14 @@ async fn clear_market(
 ) -> Json<Vec<ProposedAction>> {
     let mut state = state.lock().unwrap();
 
-    let mut by_request: HashMap<String, Vec<AgentOffer>> = HashMap::new();
+    // Preserve request order: Python dicts do, and grid validation is cumulative.
+    let mut by_request: Vec<(String, Vec<AgentOffer>)> = Vec::new();
     for offer in payload.offers {
-        by_request.entry(offer.request_id.clone()).or_default().push(offer);
+        if let Some((_, offers)) = by_request.iter_mut().find(|(id, _)| *id == offer.request_id) {
+            offers.push(offer);
+        } else {
+            by_request.push((offer.request_id.clone(), vec![offer]));
+        }
     }
 
     let mut actions = Vec::new();
@@ -155,7 +160,7 @@ async fn reserve(Query(params): Query<contracts::ReserveQuery>) -> Json<ReserveC
 }
 
 async fn health() -> impl IntoResponse {
-    Json(json!({"status": "ok"}))
+    Json(json!({"status": "ok", "engine": "rust", "service": "agent_engines", "version": env!("CARGO_PKG_VERSION")}))
 }
 
 async fn set_ev_deadlines(
@@ -168,8 +173,7 @@ async fn set_ev_deadlines(
     Json(json!({"updated": keys}))
 }
 
-#[tokio::main]
-async fn main() {
+fn create_app() -> Router {
     let shared_state: SharedState = Arc::new(Mutex::new(AppState {
         recency: RecencyTracker::default(),
         pending_requests: HashMap::new(),
@@ -187,7 +191,7 @@ async fn main() {
     // gap wasn't caught by the httpx-based testing done during development.
     let cors = CorsLayer::new().allow_origin(Any).allow_methods(Any).allow_headers(Any);
 
-    let app = Router::new()
+    Router::new()
         .route("/health", get(health))
         .route("/agents/offers", post(get_offers))
         .route("/agents/clear_market", post(clear_market))
@@ -195,9 +199,76 @@ async fn main() {
         .route("/agents/reserve", post(reserve))
         .route("/agents/debug/ev_deadlines", post(set_ev_deadlines))
         .layer(cors)
-        .with_state(shared_state);
+        .with_state(shared_state)
+}
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:8002").await.unwrap();
-    println!("agent_engines (Rust) listening on :8002");
+#[tokio::main]
+async fn main() {
+    let app = create_app();
+    let port = std::env::var("PORT").unwrap_or_else(|_| "8002".to_string());
+    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{port}")).await.unwrap();
+    println!("agent_engines (Rust) listening on :{port}");
     axum::serve(listener, app).await.unwrap();
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use axum::{body::Body, http::Request};
+    use http_body_util::BodyExt;
+    use tower::ServiceExt;
+
+    async fn post(app: Router, path: &str, payload: serde_json::Value) -> (StatusCode, serde_json::Value) {
+        let response = app.oneshot(Request::post(path).header("content-type", "application/json")
+            .body(Body::from(payload.to_string())).unwrap()).await.unwrap();
+        let status = response.status();
+        let body = response.into_body().collect().await.unwrap().to_bytes();
+        (status, serde_json::from_slice(&body).unwrap())
+    }
+
+    #[tokio::test]
+    async fn real_market_settles_only_adjusted_amount_and_protects_hospital() {
+        let app = create_app();
+        let payload = json!({
+            "grid_state": {"timestamp": "2016-06-06T06:00:00Z", "assets": [
+                {"asset_id": "hosp-1", "asset_type": "hospital", "current_load_kw": 380.0},
+                {"asset_id": "acad-1", "asset_type": "academic", "current_load_kw": 240.0}
+            ], "feeders": [{"feeder_id": "F1", "loading_percent": 105.0, "connected_assets": ["hosp-1", "acad-1"]}]},
+            "requests": [{"request_id": "request-1", "feeder_id": "F1", "kw_needed": 20.0,
+                          "deadline_seconds": 120.0, "reason": "test overload"}]
+        });
+        let (status, offers) = post(app.clone(), "/agents/offers", payload).await;
+        assert_eq!(status, StatusCode::OK);
+        let hospital = offers.as_array().unwrap().iter().find(|o| o["asset_id"] == "hosp-1").unwrap();
+        // Existing policy offers only the assumed 5% non-critical hospital load.
+        assert_eq!(hospital["kw_offered"], 19.0);
+        let (_, mut actions) = post(app.clone(), "/agents/clear_market", json!({"offers": offers})).await;
+        assert_eq!(actions[0]["asset_id"], "acad-1");
+        actions[0]["kw_amount"] = json!(7.5);
+        let (status, trades) = post(app, "/agents/settle", actions).await;
+        assert_eq!(status, StatusCode::OK);
+        assert_eq!(trades[0]["kw_amount"], 7.5);
+        assert_eq!(trades[0]["seller_id"], "acad-1");
+        assert_eq!(trades[0]["price"], 4.2); // Contract stores the offer's unit price.
+    }
+
+    #[tokio::test]
+    async fn missing_cached_offer_does_not_create_trade() {
+        let (status, _) = post(create_app(), "/agents/settle", json!([{
+            "action_id": "a", "request_id": "r", "asset_id": "acad-1", "action_type": "hvac_reduction",
+            "kw_amount": 10.0, "source_offer_id": "missing"
+        }])).await;
+        assert_eq!(status, StatusCode::NOT_FOUND);
+    }
+
+    #[tokio::test]
+    async fn clearing_keeps_request_order_for_cumulative_grid_validation() {
+        let offers: Vec<_> = ["z", "a", "m"].iter().map(|id| json!({
+            "offer_id": id, "request_id": id, "asset_id": "acad-1", "offer_type": "hvac_reduction",
+            "kw_offered": 10.0, "cost": 1.0
+        })).collect();
+        let (_, actions) = post(create_app(), "/agents/clear_market", json!({"offers": offers})).await;
+        let ids: Vec<_> = actions.as_array().unwrap().iter().map(|a| a["request_id"].as_str().unwrap()).collect();
+        assert_eq!(ids, vec!["z", "a", "m"]);
+    }
 }

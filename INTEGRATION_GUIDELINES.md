@@ -136,6 +136,12 @@ is trying to hold everyone to.
 
 ## Open items across the whole system
 
+- **Primary Rust demo (2026-09-13):** defaults are live Rust agents and the
+  public-profile Python grid. Failed settlement creates no fallback trades.
+  Shared contracts are unchanged. Use the updated orchestrator for playback;
+  see `grid_engine/INTEGRATION.md` and `README.md`. Rust clearing preserves
+  request order to match cumulative grid validation.
+
 - **Person 1:** re-verify the settle/reserve fix above using your
   merge-and-test method — see `agent_engines/CHANGELOG.md`'s top entry.
 - **Person 3:** `/agents/settle` and `/agents/reserve` are now live —
